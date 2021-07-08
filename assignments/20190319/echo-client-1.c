@@ -71,12 +71,12 @@ int main(int argc, char** argv) {
 	   	++counter;  //計算接收了幾次，此動作是為了之後降低畫面的更新速率 
 	    	if(counter == 16384)
 	    	{
-	    	counter = 0; 
-	    	t = clock() - t;  //計算所花的時間 
-		float time_taken = ((float)t) / CLOCKS_PER_SEC;
-		speed = 16384 / time_taken / 1024;  //計算速率 
-		printf("Receiving speed:%0.2f kbps\n", speed);
-		t = clock();  //重設計時器
+			counter = 0; 
+			t = clock() - t;  //計算所花的時間 
+			float time_taken = ((float)t) / CLOCKS_PER_SEC;
+			speed = 16384 / time_taken / 1024;  //計算速率 
+			printf("Receiving speed:%0.2f kbps\n", speed);
+			t = clock();  //重設計時器
 		}
 		if(m == 0)	
 		break;
