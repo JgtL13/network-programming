@@ -2,29 +2,29 @@
 #include <string.h>
 #include <winsock.h>
 
-#define MAXLINE 1024    /* ¦r¦ê½w½Ä°Ïªø«× */
+#define MAXLINE 1024    /* å­—ä¸²ç·©è¡å€é•·åº¦ */
 
 void main()
 {
-	SOCKET	serv_sd, cli_sd[10], new_sd;        /* socket ´y­z¤l */
+	SOCKET	serv_sd, cli_sd[10], new_sd;        /* socket æè¿°å­ */
   	int   	cli_len, n, i, j, x, num_client;
   	char  	str[MAXLINE];
 
   	struct 	sockaddr_in   	serv, cli;
   	WSADATA wsadata;
 	   	
-    WSAStartup(0x101, &wsadata); //©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+    	WSAStartup(0x101, &wsadata); //å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
    	
-  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// ¶}±Ò TCP socket
+  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// é–‹å•Ÿ TCP socket
 
-   	//«ü©w socket ªº IP ¦ì§}©M port number
+   	//æŒ‡å®š socket çš„ IP ä½å€å’Œ port number
    	serv.sin_family      = AF_INET;
    	serv.sin_addr.s_addr = 0;
-   	serv.sin_port        = htons(5678);	// «ü©w IPPORT_ECHO ¬° echo port
+   	serv.sin_port        = htons(5678);	// æŒ‡å®š IPPORT_ECHO ç‚º echo port
 
-    bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
+    	bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
     	
-   	listen(serv_sd, 5) ; //©I¥s listen() ¨Ï socket ¶i¤J¡uºÊÅ¥¡vª¬ºA
+   	listen(serv_sd, 5) ; //å‘¼å« listen() ä½¿ socket é€²å…¥ã€Œç›£è½ã€ç‹€æ…‹
    	
    	cli_len = sizeof(cli);
 	
@@ -36,38 +36,39 @@ void main()
 	ioctlsocket(serv_sd, FIONBIO, &iMode);
 	ioctlsocket(cli_sd[0], FIONBIO, &iMode);
 	
-   	while (1) {
-   		if((new_sd = accept(serv_sd, (LPSOCKADDR) &cli, &cli_len)) != -1) //±µ¨ü·sªºclient 
+   	while (1) 
+	{
+   		if((new_sd = accept(serv_sd, (LPSOCKADDR) &cli, &cli_len)) != -1) //æ¥å—æ–°çš„client 
    		{
    			printf("server gets a new client connection.(%d)\n", num_client + 1);
-			cli_sd[num_client] = new_sd; //±N·sªºclient¥[¤J°}¦C¤¤ 
+			cli_sd[num_client] = new_sd; //å°‡æ–°çš„clientåŠ å…¥é™£åˆ—ä¸­ 
 			ioctlsocket(cli_sd[num_client], FIONBIO, &iMode);
-			num_client++; //clientÁ`¼Æ¶q¼W¥[ 
+			num_client++; //clientç¸½æ•¸é‡å¢åŠ  
 		}
        		
 		for (i = 0; i < num_client; ++i)
 		{       		
-	        n=recv(cli_sd[i], str, MAXLINE, 0);
+	        	n=recv(cli_sd[i], str, MAXLINE, 0);
 			if (n > 0 ){
-	        	printf("cli[%d] recv and send: %s\n", i + 1, str);    	// Åã¥Ü±q client ¶Ç¨Óªº¦r¦ê
+	        	printf("cli[%d] recv and send: %s\n", i + 1, str);    	// é¡¯ç¤ºå¾ client å‚³ä¾†çš„å­—ä¸²
 	        	send(cli_sd[i], str, strlen(str)+1, 0);  //echo 
 	        }
-			int nError=WSAGetLastError();
-			if(nError!=WSAEWOULDBLOCK && nError!=0)
+		int nError=WSAGetLastError();
+		if(nError!=WSAEWOULDBLOCK && nError!=0)
+		{
+			printf("cli[%d] disconnected!\n", i + 1);
+			--num_client; //è‹¥æœ‰clientæ–·ç·šå‰‡æ¸›å°‘clientç¸½æ•¸é‡ 
+			closesocket(cli_sd[i]); //é—œé–‰æ–·ç·šçš„client 
+			for(j = i; j < num_client; ++j)
 			{
-				printf("cli[%d] disconnected!\n", i + 1);
-				--num_client; //­Y¦³clientÂ_½u«h´î¤ÖclientÁ`¼Æ¶q 
-				closesocket(cli_sd[i]); //Ãö³¬Â_½uªºclient 
-				for(j = i; j < num_client; ++j)
-				{
-					printf("client %d is now renamed as client %d\n", j + 2, j + 1);
-					cli_sd[j] = cli_sd[j + 1];	//±NÂ_½uªºclient¤§«áªºclient©¹«e»¼¸É 
-				}
+				printf("client %d is now renamed as client %d\n", j + 2, j + 1);
+				cli_sd[j] = cli_sd[j + 1];	//å°‡æ–·ç·šçš„clientä¹‹å¾Œçš„clientå¾€å‰éè£œ 
 			}
+		}
         } 
     }
  
-	//µ²§ô WinSock DLL ªº¨Ï¥Î
+	//çµæŸ WinSock DLL çš„ä½¿ç”¨
    	closesocket(serv_sd);
    	WSACleanup();
 }
