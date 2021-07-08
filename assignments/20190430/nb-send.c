@@ -6,35 +6,35 @@
 
 int main(int argc, char** argv) {  
 
-   SOCKET        	sd;     
-   struct sockaddr_in serv;
-   char  		str[1024] ,str1[1024];
-   WSADATA 		wsadata;
-   int n,i;
+	SOCKET        	sd;     
+	struct sockaddr_in serv;
+	char  		str[1024] ,str1[1024];
+	WSADATA 		wsadata;
+	int n,i;
 
-   WSAStartup(0x101,(LPWSADATA) &wsadata); // ©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
-  
-   sd=socket(AF_INET, SOCK_STREAM, 0); //¶}±Ò¤@­Ó TCP socket.
-   
-   serv.sin_family       = AF_INET;
-   serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
-   serv.sin_port         = htons(5678);
+	WSAStartup(0x101,(LPWSADATA) &wsadata); // å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
 
-   connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // ³s±µ¦Ü echo server
-   printf("Client has connected to Server.\n"); 
+	sd=socket(AF_INET, SOCK_STREAM, 0); //é–‹å•Ÿä¸€å€‹ TCP socket.
+
+	serv.sin_family       = AF_INET;
+	serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
+	serv.sin_port         = htons(5678);
+
+	connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // é€£æ¥è‡³ echo server
+	printf("Client has connected to Server.\n"); 
 
 	for (;;)
 	{
-	   printf("say: ");
-	   gets(str); //¨ú±o¨Ï¥ÎªÌ¿é¤J 
-	   send(sd, str, strlen(str)+1, 0); //¶Ç°e¦Üserver 
-	   n = recv(sd, str1, MAXLINE, 0); //¨ú±oserver echo 
-	   printf("echo:%s, size(%d)\n", str1, n);
+		printf("say: ");
+		gets(str); //å–å¾—ä½¿ç”¨è€…è¼¸å…¥ 
+		send(sd, str, strlen(str)+1, 0); //å‚³é€è‡³server 
+		n = recv(sd, str1, MAXLINE, 0); //å–å¾—server echo 
+		printf("echo:%s, size(%d)\n", str1, n);
 	}
   
-   closesocket(sd); //Ãö³¬TCP socket
-   WSACleanup();  // µ²§ô WinSock DLL ªº¨Ï¥Î
-   return 0;
+	closesocket(sd); //é—œé–‰TCP socket
+	WSACleanup();  // çµæŸ WinSock DLL çš„ä½¿ç”¨
+	return 0;
 }
 
 
