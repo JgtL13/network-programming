@@ -25,22 +25,22 @@ int main(int argc, char** argv) {
 
    	connect(sd, (LPSOCKADDR) &serv, sizeof(serv));
 
-	clock_t t;  //«Ø¥ß­p®É¾¹
+	clock_t t;  //å»ºç«‹è¨ˆæ™‚å™¨
 	t = clock();
 
 	printf("Testing upload speed...(will take about 10 seconds)\n");
 	int i = 1;
-	while(i <= 3000000)  //§Q¥Î¶]¦h¦¸°j°é¥H¹F¨ì©µªø´ú¸Õ®É¶¡¨Ï±oµ²ªG¸û¥¿½T
+	while(i <= 3000000)  //åˆ©ç”¨è·‘å¤šæ¬¡è¿´åœˆä»¥é”åˆ°å»¶é•·æ¸¬è©¦æ™‚é–“ä½¿å¾—çµæžœè¼ƒæ­£ç¢º
 	{
 		send(sd, str, strlen(str)+1, 0);
 		bytes += 26;
 		++i;
 	}
 
-   	t = clock() - t;   //ºâ¥X©Òªá®É¶¡
-    float time_taken = ((float)t)/CLOCKS_PER_SEC;  //±N©Òªá®É¶¡ªº³æ¦ìÂà¬°¬í
-    printf("Upload speed : ");
-	printf("%0.4f", bytes/time_taken/1000000);//¤p¼ÆÂI¨ú¨ì²Ä¥|¦ì §Q¥Î¸ê®Æ¶q°£¥H©Òªá¶O®É¶¡ºâ¥X¶Ç¿é³t«× ¨Ã¥B±N³æ¦ìÂà¬°MB
+   	t = clock() - t;   //ç®—å‡ºæ‰€èŠ±æ™‚é–“
+    	float time_taken = ((float)t)/CLOCKS_PER_SEC;  //å°‡æ‰€èŠ±æ™‚é–“çš„å–®ä½è½‰ç‚ºç§’
+    	printf("Upload speed : ");
+	printf("%0.4f", bytes/time_taken/1000000);//å°æ•¸é»žå–åˆ°ç¬¬å››ä½ åˆ©ç”¨è³‡æ–™é‡é™¤ä»¥æ‰€èŠ±è²»æ™‚é–“ç®—å‡ºå‚³è¼¸é€Ÿåº¦ ä¸¦ä¸”å°‡å–®ä½è½‰ç‚ºMB
 	printf(" MB/s\n");
 
 
