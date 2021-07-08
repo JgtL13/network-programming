@@ -51,8 +51,8 @@ void main()
 	        	n=recv(cli_sd[i], str, MAXLINE, 0);
 			if (n > 0 )
 			{
-	        	printf("cli[%d] recv and send: %s\n", i + 1, str);    	// 顯示從 client 傳來的字串
-	        	send(cli_sd[i], str, strlen(str)+1, 0);  //echo 
+				printf("cli[%d] recv and send: %s\n", i + 1, str);    	// 顯示從 client 傳來的字串
+				send(cli_sd[i], str, strlen(str)+1, 0);  //echo 
 	        	}
 			int nError=WSAGetLastError();
 			if(nError!=WSAEWOULDBLOCK && nError!=0)
