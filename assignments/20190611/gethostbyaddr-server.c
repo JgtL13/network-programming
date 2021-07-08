@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <winsock.h>
-#define MAXLINE 1024    /* ¦r¦ê½w½Ä°Ïªø«× */
+#define MAXLINE 1024    /* å­—ä¸²ç·©è¡å€é•·åº¦ */
 
 void main()
 {
-	SOCKET	serv_sd, cli_sd;        /* socket ´y­z¤l */
+	SOCKET	serv_sd, cli_sd;        /* socket æè¿°å­ */
   	int   	cli_len, n;
   	char  	str[MAXLINE],str_r[MAXLINE];
   	struct 	sockaddr_in  serv, cli;
@@ -18,63 +18,63 @@ void main()
 	
 	   	
 	   	
-    WSAStartup(0x101, &wsadata); //©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
-  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// ¶}±Ò TCP socket
+    	WSAStartup(0x101, &wsadata); //å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
+  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// é–‹å•Ÿ TCP socket
    	serv.sin_family      = AF_INET;
    	serv.sin_addr.s_addr = 0;
-   	serv.sin_port        = htons(1234);	// «ü©wport
-    bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));	
-   	listen(serv_sd, 5) ; //©I¥s listen() ¨Ï socket ¶i¤J¡uºÊÅ¥¡vª¬ºA
+   	serv.sin_port        = htons(1234);	// æŒ‡å®šport
+    	bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));	
+   	listen(serv_sd, 5) ; //å‘¼å« listen() ä½¿ socket é€²å…¥ã€Œç›£è½ã€ç‹€æ…‹
    	struct sockaddr_in tAddr; 
    	int lentAddr;
    	lentAddr = sizeof(tAddr);
    	cli_len = sizeof(cli);		
-	cli_sd = accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //«Ø¥ß³s½u 
+	cli_sd = accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //å»ºç«‹é€£ç·š 
 
-	//¬dIP
-	n = recv(cli_sd, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclientªº¤º®e 
+	//æŸ¥IP
+	n = recv(cli_sd, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclientçš„å…§å®¹ 
 	sAddr.s_addr = inet_addr(str_r);
 	hp = gethostbyaddr((LPSTR) &sAddr, sizeof(sAddr),AF_INET);
-	snprintf(str, sizeof(str), "host name:%s\n", hp->h_name);//±Nµ²ªG©ñ¤Jstr 
-	send(cli_sd, str, strlen(str)+1, 0);//±Nµ²ªG¶Ç°eµ¹client 
+	snprintf(str, sizeof(str), "host name:%s\n", hp->h_name);//å°‡çµæœæ”¾å…¥str 
+	send(cli_sd, str, strlen(str)+1, 0);//å°‡çµæœå‚³é€çµ¦client 
 	
-	//¬d¥D¾÷¦WºÙ
-	n = recv(cli_sd, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclientªº¤º®e 
+	//æŸ¥ä¸»æ©Ÿåç¨±
+	n = recv(cli_sd, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclientçš„å…§å®¹ 
 	hp = gethostbyname(str_r);
-	snprintf(str, sizeof(str), "host IP:%s\n", inet_ntoa(*(LPIN_ADDR)(hp->h_addr)));//±Nµ²ªG©ñ¤Jstr 
-	send(cli_sd, str, strlen(str)+1, 0);//±Nµ²ªG¶Ç°eµ¹client 
+	snprintf(str, sizeof(str), "host IP:%s\n", inet_ntoa(*(LPIN_ADDR)(hp->h_addr)));//å°‡çµæœæ”¾å…¥str 
+	send(cli_sd, str, strlen(str)+1, 0);//å°‡çµæœå‚³é€çµ¦client 
 	
-	//¬dserviceªºport
-	n = recv(cli_sd, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclientªº¤º®e 
+	//æŸ¥serviceçš„port
+	n = recv(cli_sd, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclientçš„å…§å®¹ 
 	char proto[100] = "tcp";
 	sp = getservbyname(str_r, proto);
-	snprintf(str, sizeof(str), "port:%d\n", ntohs(sp -> s_port));//±Nµ²ªG©ñ¤Jstr 
-	send(cli_sd, str, strlen(str)+1, 0);//±Nµ²ªG¶Ç°eµ¹client 
+	snprintf(str, sizeof(str), "port:%d\n", ntohs(sp -> s_port));//å°‡çµæœæ”¾å…¥str 
+	send(cli_sd, str, strlen(str)+1, 0);//å°‡çµæœå‚³é€çµ¦client 
 	
-	//¦b¯S©wportªºservice
-	n = recv(cli_sd, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclientªº¤º®e 
+	//åœ¨ç‰¹å®športçš„service
+	n = recv(cli_sd, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclientçš„å…§å®¹ 
 	int port = atoi(str_r);
 	port = (int)str_r;
 	char proto1[100] = "tcp";
 	sp = getservbyport(htons((unsigned short)str_r), proto1);
-	snprintf(str, sizeof(str), "Serve name:%s\n", (LPSTR) serv_name);//±Nµ²ªG©ñ¤Jstr 
-	send(cli_sd, str, strlen(str)+1, 0);//±Nµ²ªG¶Ç°eµ¹client 
+	snprintf(str, sizeof(str), "Serve name:%s\n", (LPSTR) serv_name);//å°‡çµæœæ”¾å…¥str 
+	send(cli_sd, str, strlen(str)+1, 0);//å°‡çµæœå‚³é€çµ¦client 
 	
-	//¬dprotocolªº½s¸¹
-	n = recv(cli_sd, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclientªº¤º®e 
+	//æŸ¥protocolçš„ç·¨è™Ÿ
+	n = recv(cli_sd, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclientçš„å…§å®¹ 
 	pp = getprotobyname(str_r);
-	snprintf(str, sizeof(str), "number:%d\n", pp -> p_proto);//±Nµ²ªG©ñ¤Jstr 
-	send(cli_sd, str, strlen(str)+1, 0);//±Nµ²ªG¶Ç°eµ¹client 
+	snprintf(str, sizeof(str), "number:%d\n", pp -> p_proto);//å°‡çµæœæ”¾å…¥str 
+	send(cli_sd, str, strlen(str)+1, 0);//å°‡çµæœå‚³é€çµ¦client 
 	
-	//¬d¦b¯S©w½s¸¹ªºprotocol
-	n = recv(cli_sd, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclientªº¤º®e 
+	//æŸ¥åœ¨ç‰¹å®šç·¨è™Ÿçš„protocol
+	n = recv(cli_sd, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclientçš„å…§å®¹ 
 	int number = atoi(str_r);
 	pp = getprotobynumber(number);
-	snprintf(str, sizeof(str), "protocol name:%s\n", pp -> p_name);//±Nµ²ªG©ñ¤Jstr 
-	send(cli_sd, str, strlen(str)+1, 0);//±Nµ²ªG¶Ç°eµ¹client 
+	snprintf(str, sizeof(str), "protocol name:%s\n", pp -> p_name);//å°‡çµæœæ”¾å…¥str 
+	send(cli_sd, str, strlen(str)+1, 0);//å°‡çµæœå‚³é€çµ¦client 
 	
 	
-	//µ²§ô WinSock DLL ªº¨Ï¥Î
+	//çµæŸ WinSock DLL çš„ä½¿ç”¨
    	closesocket(serv_sd);
    	closesocket(cli_sd);
    	WSACleanup();
