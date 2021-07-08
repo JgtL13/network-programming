@@ -49,24 +49,25 @@ void main()
 		for (i = 0; i < num_client; ++i)
 		{       		
 	        	n=recv(cli_sd[i], str, MAXLINE, 0);
-			if (n > 0 ){
+			if (n > 0 )
+			{
 	        	printf("cli[%d] recv and send: %s\n", i + 1, str);    	// 顯示從 client 傳來的字串
 	        	send(cli_sd[i], str, strlen(str)+1, 0);  //echo 
-	        }
-		int nError=WSAGetLastError();
-		if(nError!=WSAEWOULDBLOCK && nError!=0)
-		{
-			printf("cli[%d] disconnected!\n", i + 1);
-			--num_client; //若有client斷線則減少client總數量 
-			closesocket(cli_sd[i]); //關閉斷線的client 
-			for(j = i; j < num_client; ++j)
+	        	}
+			int nError=WSAGetLastError();
+			if(nError!=WSAEWOULDBLOCK && nError!=0)
 			{
-				printf("client %d is now renamed as client %d\n", j + 2, j + 1);
-				cli_sd[j] = cli_sd[j + 1];	//將斷線的client之後的client往前遞補 
+				printf("cli[%d] disconnected!\n", i + 1);
+				--num_client; //若有client斷線則減少client總數量 
+				closesocket(cli_sd[i]); //關閉斷線的client 
+				for(j = i; j < num_client; ++j)
+				{
+					printf("client %d is now renamed as client %d\n", j + 2, j + 1);
+					cli_sd[j] = cli_sd[j + 1];	//將斷線的client之後的client往前遞補 
+				}
 			}
-		}
-        } 
-    }
+        	} 
+    	}
  
 	//結束 WinSock DLL 的使用
    	closesocket(serv_sd);
