@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
    
    	memset(str,1,MAXLINE);
    
-   	WSAStartup(0x101,(LPWSADATA) &wsadata); // ©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+   	WSAStartup(0x101,(LPWSADATA) &wsadata); // å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
   
  
    	sd=socket(AF_INET, SOCK_DGRAM, 0);
@@ -29,53 +29,53 @@ int main(int argc, char** argv) {
    	serv_len = sizeof(serv);
  
 	
-   	for (i = 0; i < 64; i++)  //¦¹³B¥ÎÂù¼h°j°éªº¥Î·N¬°´î¤Öµe­±§ó·s³t²v 
+   	for (i = 0; i < 64; i++)  //æ­¤è™•ç”¨é›™å±¤è¿´åœˆçš„ç”¨æ„ç‚ºæ¸›å°‘ç•«é¢æ›´æ–°é€Ÿç‡ 
    	{
    		clock_t t;
-		t = clock();  //±Ò°Ê­p®É¾¹ 
+		t = clock();  //å•Ÿå‹•è¨ˆæ™‚å™¨ 
    		for(j = 0; j < 16384; ++j)
 		{
-	   		n += sendto(sd, str, MAXLINE, 0, (LPSOCKADDR) &serv, serv_len); //¶Ç°e
+	   		n += sendto(sd, str, MAXLINE, 0, (LPSOCKADDR) &serv, serv_len); //å‚³é€
 		}	
-		t = clock() - t;  //­pºâ©Òªá®É¶¡ 
+		t = clock() - t;  //è¨ˆç®—æ‰€èŠ±æ™‚é–“ 
 	   	float time_taken = ((float)t) / CLOCKS_PER_SEC;
-	   	speed = 16384 / time_taken / 1024;  //­pºâ³t²v 
+	   	speed = 16384 / time_taken / 1024;  //è¨ˆç®—é€Ÿç‡ 
 	   	printf("Sending speed:%0.2f mbps\n", speed);
-	   	if(i == 63)  //­Y¶Ç°e§¹¡A¦^¶Çendµ¹±µ¦¬ºİ¡A§iª¾µ²§ô 
+	   	if(i == 63)  //è‹¥å‚³é€å®Œï¼Œå›å‚³endçµ¦æ¥æ”¶ç«¯ï¼Œå‘ŠçŸ¥çµæŸ 
 	   	{
 	   		strcpy(str, "end");
 	   		sendto(sd, str, MAXLINE, 0, (LPSOCKADDR) &serv, serv_len);
 		}
    	}
-   	printf("Total sent : %d bits.\n", n);  //¦L¥XÁ`¦@°e¥Xªº¸ê®Æ¶q 
+   	printf("Total sent : %d bits.\n", n);  //å°å‡ºç¸½å…±é€å‡ºçš„è³‡æ–™é‡ 
    	
    	
-	//¨¤¦â¥æ´«	
+	//è§’è‰²äº¤æ›	
 	serv_len = sizeof(serv);
 	printf("Server waiting for Client\n");  		
 	
 	clock_t t;  
-	t = clock();  //±Ò°Ê­p®É¾¹ 
+	t = clock();  //å•Ÿå‹•è¨ˆæ™‚å™¨ 
 		
 	while(1)
 	{
 		
-	   	m += recvfrom(sd, str_r, MAXLINE, 0, (LPSOCKADDR) &serv, &serv_len); //±µ¦¬ 
-	   	if(strcmp(str_r, "end") == 0) //­Y³Q§iª¾µ²§ô«hbreak 
+	   	m += recvfrom(sd, str_r, MAXLINE, 0, (LPSOCKADDR) &serv, &serv_len); //æ¥æ”¶ 
+	   	if(strcmp(str_r, "end") == 0) //è‹¥è¢«å‘ŠçŸ¥çµæŸå‰‡break 
 	   	{
 	   		break;
 		}	
-		if(m % 16777216 == 0)  //¥H16777216¬°¤@³æ¦ì¶i¦æ¹Bºâ¡A´î¤Öµe­±§ó·sÀW²v 
+		if(m % 16777216 == 0)  //ä»¥16777216ç‚ºä¸€å–®ä½é€²è¡Œé‹ç®—ï¼Œæ¸›å°‘ç•«é¢æ›´æ–°é »ç‡ 
 		{
-	    	t = clock() - t;  //­pºâ©Òªáªº®É¶¡ 
+	    		t = clock() - t;  //è¨ˆç®—æ‰€èŠ±çš„æ™‚é–“ 
 		   	float time_taken = ((float)t) / CLOCKS_PER_SEC;
-		   	speed = 16384 / time_taken / 1024;  //­pºâ³t²v 
+		   	speed = 16384 / time_taken / 1024;  //è¨ˆç®—é€Ÿç‡ 
 		   	printf("Receiving speed:%0.2f mbps\n", speed);
-		   	t = clock();  //­«³]­p®É¾¹ 
+		   	t = clock();  //é‡è¨­è¨ˆæ™‚å™¨ 
 		}
 
 	}
-	printf("Total received : %d bits.\n", m); //Á`¦@±µ¦¬ªº¸ê®Æ¶q 
+	printf("Total received : %d bits.\n", m); //ç¸½å…±æ¥æ”¶çš„è³‡æ–™é‡ 
 	WSACleanup();
 	system("pause");
    	return 0;
