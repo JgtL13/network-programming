@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <winsock.h>
-#define MAXLINE 1024    /* ¦r¦ê½w½Ä°Ïªø«× */
+#define MAXLINE 1024    /* å­—ä¸²ç·©è¡å€é•·åº¦ */
 
 void main()
 {
-	SOCKET	serv_sd, cli_sd;        /* socket ´y­z¤l */
+	SOCKET	serv_sd, cli_sd;        /* socket æè¿°å­ */
   	int   	cli_len, n, temp = 50, round = 0, left = 1, right = 100;
   	char  	str[MAXLINE], str_r[MAXLINE], sResponse[MAXLINE], cResponse[MAXLINE], sGuess[MAXLINE];
 	srand(time(NULL));
@@ -16,45 +16,45 @@ void main()
   	sprintf(sGuess, "%d", temp);
   	WSADATA wsadata;
 	   	
-    WSAStartup(0x101, &wsadata); //©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+    	WSAStartup(0x101, &wsadata); //å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
    	
-  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// ¶}±Ò TCP socket
+  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// é–‹å•Ÿ TCP socket
 
-   	//«ü©w socket ªº IP ¦ì§}©M port number
+   	//æŒ‡å®š socket çš„ IP ä½å€å’Œ port number
    	serv.sin_family      = AF_INET;
    	serv.sin_addr.s_addr = 0;
-   	serv.sin_port        = htons(5678);	// «ü©wport
+   	serv.sin_port        = htons(5678);	// æŒ‡å®šport
 
 
-	while(1)//«ùÄò¶i¦æ¹CÀ¸ 
+	while(1)//æŒçºŒé€²è¡ŒéŠæˆ² 
    	{
    		++round;
 	    bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
-	   	listen(serv_sd, 5) ; //©I¥s listen() ¨Ï socket ¶i¤J¡uºÊÅ¥¡vª¬ºA
+	   	listen(serv_sd, 5) ; //å‘¼å« listen() ä½¿ socket é€²å…¥ã€Œç›£è½ã€ç‹€æ…‹
 		   	
 		cli_len = sizeof(cli);
 	 		
 		cli_sd=accept(serv_sd, (LPSOCKADDR) &cli, &cli_len);
-	   	n=recv(cli_sd, str_r, MAXLINE, 0); //¥Ñserver±µ¦¬ 
+	   	n=recv(cli_sd, str_r, MAXLINE, 0); //ç”±serveræ¥æ”¶ 
 	   	printf("Round %d : ", round);
 	   	printf("Client guessed %s, ",str_r);
 	
-		int input = atoi(str_r);//±Nstr_r¥ÑstringÂà¬°int ¤è«K¤§«á­pºâ 
+		int input = atoi(str_r);//å°‡str_rç”±stringè½‰ç‚ºint æ–¹ä¾¿ä¹‹å¾Œè¨ˆç®— 
 		
-		if(input == answer) //­Yµª®×¥¿½T 
+		if(input == answer) //è‹¥ç­”æ¡ˆæ­£ç¢º 
 	   	{
 	   		strcpy(sResponse, "correct");
 	   		printf("%s. ", sResponse);
 	   		send(cli_sd, sResponse, strlen(sResponse) + 1, 0);
 	   		break;
 		}
-		else if(input < answer) //­Y¤p©óµª®× 
+		else if(input < answer) //è‹¥å°æ–¼ç­”æ¡ˆ 
 		{
 			strcpy(sResponse, "too small");
 			printf("%s. ", sResponse);
 			send(cli_sd, sResponse, strlen(sResponse) + 1, 0);
 		}
-		else if(input > answer) //­Y¤j©óµª®× 
+		else if(input > answer) //è‹¥å¤§æ–¼ç­”æ¡ˆ 
 		{
 			strcpy(sResponse, "too large");
 			printf("%s. ", sResponse);
@@ -62,28 +62,28 @@ void main()
 		}	
 		
 		printf("Server guesses %s.\n", sGuess);
-		send(cli_sd, sGuess, strlen(sGuess) + 1, 0); //±Nserver²qªº¼Æ¦r¦^¶Ç¦Üclientºİ 
-		n=recv(cli_sd, cResponse, MAXLINE, 0); //±µ¦¬client¦^¶Çªº¦^ÂĞ µª®×¬O§_¥¿½T 
+		send(cli_sd, sGuess, strlen(sGuess) + 1, 0); //å°‡serverçŒœçš„æ•¸å­—å›å‚³è‡³clientç«¯ 
+		n=recv(cli_sd, cResponse, MAXLINE, 0); //æ¥æ”¶clientå›å‚³çš„å›è¦† ç­”æ¡ˆæ˜¯å¦æ­£ç¢º 
 		if(strcmp(cResponse, "too large") == 0)
 		{
 			right = temp;
-			temp = temp - ((temp - left) / 2); //¤G¤¸·j´Mªk 
+			temp = temp - ((temp - left) / 2); //äºŒå…ƒæœå°‹æ³• 
 			sprintf(sGuess, "%d", temp);
 		}
 		else if(strcmp(cResponse, "too small") == 0)
 		{
 			left = temp;
 			//printf("here2");
-			temp = temp + ((right - temp) / 2); //¤G¤¸·j´Mªk 
+			temp = temp + ((right - temp) / 2); //äºŒå…ƒæœå°‹æ³• 
 			sprintf(sGuess, "%d", temp);
 		}
-		else if(strcmp(cResponse, "correct") == 0) //­Yµª®×¥¿½T °±¤î¹CÀ¸ 
+		else if(strcmp(cResponse, "correct") == 0) //è‹¥ç­”æ¡ˆæ­£ç¢º åœæ­¢éŠæˆ² 
 		{
 			break;
 		}
 	}
     
-	//µ²§ô WinSock DLL ªº¨Ï¥Î
+	//çµæŸ WinSock DLL çš„ä½¿ç”¨
    	closesocket(serv_sd);
    	closesocket(cli_sd);
    	WSACleanup();
