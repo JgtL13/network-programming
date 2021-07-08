@@ -2,24 +2,24 @@
 #include <string.h>
 #include <winsock.h>
 
-#define MAXLINE 15    /* ¦r¦ê½w½Ä°Ïªø«× */
+#define MAXLINE 15    /* å­—ä¸²ç·©è¡å€é•·åº¦ */
 
 void main()
 {
-	SOCKET	serv_sd, serv_brod_sd;        /* socket ´y­z¤l */
+	SOCKET	serv_sd, serv_brod_sd;        /* socket æè¿°å­ */
   	int   	cli_len, brod_len, n,i=1;
   	char  	str[MAXLINE];
-  	char    bc[200] = "¸s²ÕIP : 224.1.1.1~224.1.1.3\n¸s²ÕPORT : 8813\n\nÀW¹D1 : ÀW¹D1¤¶²Ğ(½Ğ«ö1¿ï¾Ü¦¬¬İ¡A«öa¿ï¾Ü°±¤î¦¬¬İ)\nÀW¹D2 : ÀW¹D2¤¶²Ğ(½Ğ«ö2¿ï¾Ü¦¬¬İ¡A«öb¿ï¾Ü°±¤î¦¬¬İ)\nÀW¹D3 : ÀW¹D3¤¶²Ğ(½Ğ«ö3¿ï¾Ü¦¬¬İ¡A«öc¿ï¾Ü°±¤î¦¬¬İ)\n";  //¸`¥Ø³æ 
+  	char    bc[200] = "ç¾¤çµ„IP : 224.1.1.1~224.1.1.3\nç¾¤çµ„PORT : 8813\n\né »é“1 : é »é“1ä»‹ç´¹(è«‹æŒ‰1é¸æ“‡æ”¶çœ‹ï¼ŒæŒ‰aé¸æ“‡åœæ­¢æ”¶çœ‹)\né »é“2 : é »é“2ä»‹ç´¹(è«‹æŒ‰2é¸æ“‡æ”¶çœ‹ï¼ŒæŒ‰bé¸æ“‡åœæ­¢æ”¶çœ‹)\né »é“3 : é »é“3ä»‹ç´¹(è«‹æŒ‰3é¸æ“‡æ”¶çœ‹ï¼ŒæŒ‰cé¸æ“‡åœæ­¢æ”¶çœ‹)\n";  //ç¯€ç›®å–® 
 
   	struct 	sockaddr_in   	serv, cli, brod;
   	WSADATA wsadata;
 	   	
-    WSAStartup(0x101, &wsadata); //©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+    	WSAStartup(0x101, &wsadata); //å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
 	
-   	serv_sd=socket(AF_INET, SOCK_DGRAM, 0);// ¶}±Ò UDP socket
+   	serv_sd=socket(AF_INET, SOCK_DGRAM, 0);// é–‹å•Ÿ UDP socket
    	serv_brod_sd = socket(AF_INET, SOCK_DGRAM, 0);
    	
-   	//¥Î¨Ó¼s¼½ªº³]©w
+   	//ç”¨ä¾†å»£æ’­çš„è¨­å®š
    	char broadcast = 'a';
 	setsockopt(serv_brod_sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
 	brod.sin_family      = AF_INET;
@@ -28,9 +28,9 @@ void main()
 
    	    /* Set TTL of multicast packet */
    	int multicastTTL=1;
-    if (setsockopt(serv_sd, IPPROTO_IP, IP_MULTICAST_TTL, (char *) &multicastTTL, 
-          sizeof(multicastTTL)) == SOCKET_ERROR)
-    printf("setsockopt() failed");
+    	if (setsockopt(serv_sd, IPPROTO_IP, IP_MULTICAST_TTL, (char *) &multicastTTL, 
+          	sizeof(multicastTTL)) == SOCKET_ERROR)
+    	printf("setsockopt() failed");
    	
    	
    	cli_len = sizeof(cli);
@@ -39,34 +39,34 @@ void main()
    	
    	printf("server will multicastcast.\n");
    	               
-    cli.sin_family      = AF_INET;
+    	cli.sin_family      = AF_INET;
    	cli.sin_addr.s_addr = inet_addr("224.1.1.1");
    	cli.sin_port        = htons(8813);
    		
-while(1){	
+	while(1){	
 	
-		sendto(serv_brod_sd, bc, strlen(bc), 0,(LPSOCKADDR)&brod,brod_len);  //¼s¼½¸`¥Ø¿ï³æ 
+		sendto(serv_brod_sd, bc, strlen(bc), 0,(LPSOCKADDR)&brod,brod_len);  //å»£æ’­ç¯€ç›®é¸å–® 
 		
-		cli.sin_addr.s_addr = inet_addr("224.1.1.1"); //ÀW¹D1 
+		cli.sin_addr.s_addr = inet_addr("224.1.1.1"); //é »é“1 
 		memset(str, i%10 +'0', sizeof(str));
 		sendto(serv_sd, str, strlen(str), 0,(LPSOCKADDR)&cli,cli_len);
-        printf("server multicast: %s\n",str);		// Åã¥Ü°e¥hclient ªº¦r¦ê	
+        	printf("server multicast: %s\n",str);		// é¡¯ç¤ºé€å»client çš„å­—ä¸²	
         
-        cli.sin_addr.s_addr = inet_addr("224.1.1.2"); //ÀW¹D2 
-        memset(str, (i - 1) % 26 +'a', sizeof(str));
+        	cli.sin_addr.s_addr = inet_addr("224.1.1.2"); //é »é“2 
+        	memset(str, (i - 1) % 26 +'a', sizeof(str));
 		sendto(serv_sd, str, strlen(str), 0,(LPSOCKADDR)&cli,cli_len);
-        printf("server multicast: %s\n",str);		// Åã¥Ü°e¥hclient ªº¦r¦ê	
+        	printf("server multicast: %s\n",str);		// é¡¯ç¤ºé€å»client çš„å­—ä¸²	
         
-        cli.sin_addr.s_addr = inet_addr("224.1.1.3"); //ÀW¹D3 
-        memset(str, (i - 1) % 26 +'A', sizeof(str));
+        	cli.sin_addr.s_addr = inet_addr("224.1.1.3"); //é »é“3 
+        	memset(str, (i - 1) % 26 +'A', sizeof(str));
 		sendto(serv_sd, str, strlen(str), 0,(LPSOCKADDR)&cli,cli_len);
-        printf("server multicast: %s\n",str);		// Åã¥Ü°e¥hclient ªº¦r¦ê
+        	printf("server multicast: %s\n",str);		// é¡¯ç¤ºé€å»client çš„å­—ä¸²
 			
-        sleep(1);
-        i++;
-    }
+        	sleep(1);
+        	i++;
+    	}
         
-	//µ²§ô WinSock DLL ªº¨Ï¥Î
+	//çµæŸ WinSock DLL çš„ä½¿ç”¨
    	closesocket(serv_sd);
    	//closesocket(cli_sd);
    	WSACleanup();
