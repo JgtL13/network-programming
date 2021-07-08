@@ -29,7 +29,7 @@ void main()
 	while(1)//持續進行遊戲 
    	{
    		++round;
-	    bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
+	    	bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
 	   	listen(serv_sd, 5) ; //呼叫 listen() 使 socket 進入「監聽」狀態
 		   	
 		cli_len = sizeof(cli);
