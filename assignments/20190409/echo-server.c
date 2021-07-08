@@ -1,78 +1,78 @@
 #include <stdio.h>
 #include <string.h>
 #include <winsock.h>
-#define MAXLINE 1024    /* ¦r¦ê½w½Ä°Ïªø«× */
+#define MAXLINE 1024    /* å­—ä¸²ç·©è¡å€é•·åº¦ */
 
 void main()
 {
-	SOCKET	serv_sd, cli_sd1, cli_sd2, cli_sd3;        /* socket ´y­z¤l */
+	SOCKET	serv_sd, cli_sd1, cli_sd2, cli_sd3;        /* socket æè¿°å­ */
   	int   	cli_len, n;
   	char  	str[MAXLINE],str_r[MAXLINE];
   	struct 	sockaddr_in  serv, cli;
   	WSADATA wsadata;
 	   	
 	   	
-    WSAStartup(0x101, &wsadata); //©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
-  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// ¶}±Ò TCP socket
+    	WSAStartup(0x101, &wsadata); //å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
+  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// é–‹å•Ÿ TCP socket
    	serv.sin_family      = AF_INET;
    	serv.sin_addr.s_addr = 0;
-   	serv.sin_port        = htons(1234);	// «ü©wport
-    bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));	
-   	listen(serv_sd, 5) ; //©I¥s listen() ¨Ï socket ¶i¤J¡uºÊÅ¥¡vª¬ºA
+   	serv.sin_port        = htons(1234);	// æŒ‡å®šport
+    	bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));	
+   	listen(serv_sd, 5) ; //å‘¼å« listen() ä½¿ socket é€²å…¥ã€Œç›£è½ã€ç‹€æ…‹
    	struct sockaddr_in tAddr; 
    	int lentAddr;
    	lentAddr = sizeof(tAddr);
    	cli_len = sizeof(cli);
    	
-   	//µ¥«İclient1 
+   	//ç­‰å¾…client1 
 	printf("server waits for client 1.\n");  		
-	cli_sd1=accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //«Ø¥ß³s½u 
+	cli_sd1=accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //å»ºç«‹é€£ç·š 
 	printf("connection succesful.\n");
-	getpeername(cli_sd1, (LPSOCKADDR) &tAddr, &lentAddr);  //Àò¨úpeer name 
-	printf("Client 1' IP: %s, port: %d\n", inet_ntoa(tAddr.sin_addr), ntohs(tAddr.sin_port)); //¿é¥XpeerªºIP¦ì¸m¤Îport number 
+	getpeername(cli_sd1, (LPSOCKADDR) &tAddr, &lentAddr);  //ç²å–peer name 
+	printf("Client 1' IP: %s, port: %d\n", inet_ntoa(tAddr.sin_addr), ntohs(tAddr.sin_port)); //è¼¸å‡ºpeerçš„IPä½ç½®åŠport number 
 	
-	//µ¥«İclient2
+	//ç­‰å¾…client2
 	printf("server waits for client 2.\n");  		
-	cli_sd2=accept(serv_sd, (LPSOCKADDR) &cli, &cli_len);//«Ø¥ß³s½u  
+	cli_sd2=accept(serv_sd, (LPSOCKADDR) &cli, &cli_len);//å»ºç«‹é€£ç·š  
 	printf("connection succesful.\n");
-	getpeername(cli_sd2, (LPSOCKADDR) &tAddr, &lentAddr);//Àò¨úpeer name
-	printf("Client 2' IP: %s, port: %d\n", inet_ntoa(tAddr.sin_addr), ntohs(tAddr.sin_port));//¿é¥XpeerªºIP¦ì¸m¤Îport number 
+	getpeername(cli_sd2, (LPSOCKADDR) &tAddr, &lentAddr);//ç²å–peer name
+	printf("Client 2' IP: %s, port: %d\n", inet_ntoa(tAddr.sin_addr), ntohs(tAddr.sin_port));//è¼¸å‡ºpeerçš„IPä½ç½®åŠport number 
 	
-	//µ¥«İclient3 
+	//ç­‰å¾…client3 
 	printf("server waits for client 3.\n");  		
-	cli_sd3=accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //«Ø¥ß³s½u 
+	cli_sd3=accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //å»ºç«‹é€£ç·š 
 	printf("connection succesful.\n");
-	getpeername(cli_sd3, (LPSOCKADDR) &tAddr, &lentAddr);//Àò¨úpeer name
-	printf("Client 3' IP: %s, port: %d\n", inet_ntoa(tAddr.sin_addr), ntohs(tAddr.sin_port));//¿é¥XpeerªºIP¦ì¸m¤Îport number 
+	getpeername(cli_sd3, (LPSOCKADDR) &tAddr, &lentAddr);//ç²å–peer name
+	printf("Client 3' IP: %s, port: %d\n", inet_ntoa(tAddr.sin_addr), ntohs(tAddr.sin_port));//è¼¸å‡ºpeerçš„IPä½ç½®åŠport number 
 
 	while(1)
 	{
-		n = recv(cli_sd1, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclient1ªº¤º®e 
-    	printf("server recv from client1: %s (%d bytes)\n",str_r,n); 
-    	strcpy(str, str_r);
-		send(cli_sd2, str, strlen(str)+1, 0);//¶Ç°e¦Üclient2 
-		send(cli_sd3, str, strlen(str)+1, 0);//¶Ç°e¦Üclient3
-    	printf("server sends to client2: %s (%d bytes)\n", str, strlen(str) + 1);
-    	printf("server sends to client3: %s (%d bytes)\n", str, strlen(str) + 1);
+		n = recv(cli_sd1, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclient1çš„å…§å®¹ 
+    		printf("server recv from client1: %s (%d bytes)\n",str_r,n); 
+    		strcpy(str, str_r);
+		send(cli_sd2, str, strlen(str)+1, 0);//å‚³é€è‡³client2 
+		send(cli_sd3, str, strlen(str)+1, 0);//å‚³é€è‡³client3
+    		printf("server sends to client2: %s (%d bytes)\n", str, strlen(str) + 1);
+    		printf("server sends to client3: %s (%d bytes)\n", str, strlen(str) + 1);
     	
-    	n = recv(cli_sd2, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclient2ªº¤º®e 
-    	printf("server recv from client2: %s (%d bytes)\n",str_r,n); 
-    	strcpy(str, str_r);
-		send(cli_sd1, str, strlen(str)+1, 0);//¶Ç°e¦Üclient1
-		send(cli_sd3, str, strlen(str)+1, 0);//¶Ç°e¦Üclient3
-    	printf("server sends to client1: %s (%d bytes)\n", str, strlen(str) + 1);
-    	printf("server sends to client3: %s (%d bytes)\n", str, strlen(str) + 1);
+    		n = recv(cli_sd2, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclient2çš„å…§å®¹ 
+    		printf("server recv from client2: %s (%d bytes)\n",str_r,n); 
+    		strcpy(str, str_r);
+		send(cli_sd1, str, strlen(str)+1, 0);//å‚³é€è‡³client1
+		send(cli_sd3, str, strlen(str)+1, 0);//å‚³é€è‡³client3
+    		printf("server sends to client1: %s (%d bytes)\n", str, strlen(str) + 1);
+    		printf("server sends to client3: %s (%d bytes)\n", str, strlen(str) + 1);
     	
-    	n = recv(cli_sd3, str_r, MAXLINE, 0);//Åª¨ú¨Ó¦Ûclient3ªº¤º®e 
-    	printf("server recv from client3: %s (%d bytes)\n",str_r,n); 
-    	strcpy(str, str_r);
-		send(cli_sd1, str, strlen(str)+1, 0);//¶Ç°e¦Üclient1
-		send(cli_sd2, str, strlen(str)+1, 0);//¶Ç°e¦Üclient2
-    	printf("server sends to client1: %s (%d bytes)\n", str, strlen(str) + 1);
-    	printf("server sends to client2: %s (%d bytes)\n", str, strlen(str) + 1);
+    		n = recv(cli_sd3, str_r, MAXLINE, 0);//è®€å–ä¾†è‡ªclient3çš„å…§å®¹ 
+    		printf("server recv from client3: %s (%d bytes)\n",str_r,n); 
+    		strcpy(str, str_r);
+		send(cli_sd1, str, strlen(str)+1, 0);//å‚³é€è‡³client1
+		send(cli_sd2, str, strlen(str)+1, 0);//å‚³é€è‡³client2
+    		printf("server sends to client1: %s (%d bytes)\n", str, strlen(str) + 1);
+    		printf("server sends to client2: %s (%d bytes)\n", str, strlen(str) + 1);
 	}
     
-	//µ²§ô WinSock DLL ªº¨Ï¥Î
+	//çµæŸ WinSock DLL çš„ä½¿ç”¨
    	closesocket(serv_sd);
    	closesocket(cli_sd1);
    	closesocket(cli_sd2);
