@@ -12,53 +12,53 @@ char  		str_r[1024];
 char 		reject[100] = "Chat room is currently full, please try again later.\n";
 WSADATA 		wsadata;
 int timeout = 50,n;
-void *recvMess(void *argu) {    // ¨C¹j¤@¬íÄÁ¦L¥X¤@¦¸ George ªº¨ç¼Æ
-    while (1) {
-        setsockopt(sd,SOL_SOCKET,SO_RCVTIMEO,&timeout,sizeof(timeout));
-		n=recv(sd, str_r, MAXLINE, 0); //±µ¦¬¨Ó¦Û¨ä¥Lclientªº°T®§
-		if(strcmp(str_r, reject) == 0) //§PÂ_°T®§¬O§_¬°Â_½u³qª¾ 
+void *recvMess(void *argu) {    // æ¯éš”ä¸€ç§’é˜å°å‡ºä¸€æ¬¡ George çš„å‡½æ•¸
+    	while (1) 
+	{
+        	setsockopt(sd,SOL_SOCKET,SO_RCVTIMEO,&timeout,sizeof(timeout));
+		n=recv(sd, str_r, MAXLINE, 0); //æ¥æ”¶ä¾†è‡ªå…¶ä»–clientçš„è¨Šæ¯
+		if(strcmp(str_r, reject) == 0) //åˆ¤æ–·è¨Šæ¯æ˜¯å¦ç‚ºæ–·ç·šé€šçŸ¥ 
 		{
-				printf("%s", reject);
-			   	closesocket(sd); //Ãö³¬TCP socket
-   				WSACleanup();  // µ²§ô WinSock DLL ªº¨Ï¥Î
-   				system("pause");
-   				break;
+			printf("%s", reject);
+			closesocket(sd); //é—œé–‰TCP socket
+   			WSACleanup();  // çµæŸ WinSock DLL çš„ä½¿ç”¨
+   			system("pause");
+   			break;
 		}
 		else if(n!=-1)
 		{
 			printf("recv: %s (%d bytes)\n",str_r,strlen(str_r)+1);
 		}
-            
-    }
+    	}
 }
 
 int main(int argc, char** argv) {
-   	int n,i,j,total=0;
-    pthread_t thread1;
+	int n,i,j,total=0;
+    	pthread_t thread1;
 
-   	WSAStartup(0x101,(LPWSADATA) &wsadata); // ©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+   	WSAStartup(0x101,(LPWSADATA) &wsadata); // å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
 
 
-   	sd=socket(AF_INET, SOCK_STREAM, 0); //¶}±Ò¤@­Ó TCP socket.
+   	sd=socket(AF_INET, SOCK_STREAM, 0); //é–‹å•Ÿä¸€å€‹ TCP socket.
 
    	serv.sin_family       = AF_INET;
    	serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
    	serv.sin_port         = htons(5678);
 
-   	connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // ³s±µ¦Ü echo server
+   	connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // é€£æ¥è‡³ echo server
 
 	pthread_create(&thread1, NULL, &recvMess, NULL);
     
-	while(1){
+	while(1)
+	{
 		gets(str);
-		send(sd, str, strlen(str)+1, 0); //¶Ç°e°T®§
+		send(sd, str, strlen(str)+1, 0); //å‚³é€è¨Šæ¯
 	}
 
-   closesocket(sd); //Ãö³¬TCP socket
+   	closesocket(sd); //é—œé–‰TCP socket
 
-   WSACleanup();  // µ²§ô WinSock DLL ªº¨Ï¥Î
-   system("pause");
+   	WSACleanup();  // çµæŸ WinSock DLL çš„ä½¿ç”¨
+   	system("pause");
 
-   return 0;
+   	return 0;
 }
-
