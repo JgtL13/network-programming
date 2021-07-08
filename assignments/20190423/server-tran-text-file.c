@@ -1,14 +1,14 @@
-//client¶Ç­ÓÀÉ123.txt¨ìserver
-//v1¡G¨C¬í°e¤@­Óchar
+//clientå‚³å€‹æª”123.txtåˆ°server
+//v1ï¼šæ¯ç§’é€ä¸€å€‹char
 #include <stdio.h>
 #include <string.h>
 #include <winsock.h>
 
-#define MAXLINE 1024    /* ¦r¦ê½w½Ä°Ïªø«× */
+#define MAXLINE 1024    /* å­—ä¸²ç·©è¡å€é•·åº¦ */
 
 int main()
 {
-	SOCKET	serv_sd, cli_sd;        /* socket ´y­z¤l */
+	SOCKET	serv_sd, cli_sd;        /* socket æè¿°å­ */
   	int   	cli_len, n,counter=1;
   	char  	str[MAXLINE], fName[1024];
 
@@ -16,27 +16,27 @@ int main()
   	WSADATA wsadata;
   	FILE *fptr1;
 
-	while(1)//¥i³sÄò¦¬¦h­ÓÀÉ®× 
+	while(1)//å¯é€£çºŒæ”¶å¤šå€‹æª”æ¡ˆ 
 	{
 		printf("Enter destination file name : ");
-		gets(fName); //Åª¨ú§Æ±æªº¥Øªº¦aÀÉ®×¦WºÙ 
+		gets(fName); //è®€å–å¸Œæœ›çš„ç›®çš„åœ°æª”æ¡ˆåç¨± 
 		fptr1=fopen(fName,"w");
 		if(fptr1!=NULL)
 		{
 	
-		    WSAStartup(0x101, &wsadata); //©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+		    	WSAStartup(0x101, &wsadata); //å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
 		
-		  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// ¶}±Ò TCP socket
+		  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// é–‹å•Ÿ TCP socket
 		
-		   	//«ü©w socket ªº IP ¦ì§}©M port number
+		   	//æŒ‡å®š socket çš„ IP ä½å€å’Œ port number
 		   	serv.sin_family      = AF_INET;
 		   	serv.sin_addr.s_addr = 0;
-		   	serv.sin_port        = htons(5678);	// «ü©w IPPORT_ECHO ¬° echo port
+		   	serv.sin_port        = htons(5678);	// æŒ‡å®š IPPORT_ECHO ç‚º echo port
 		
 		
-		    bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
+		    	bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
 		
-		   	listen(serv_sd, 5) ; //©I¥s listen() ¨Ï socket ¶i¤J¡uºÊÅ¥¡vª¬ºA
+		   	listen(serv_sd, 5) ; //å‘¼å« listen() ä½¿ socket é€²å…¥ã€Œç›£è½ã€ç‹€æ…‹
 		
 		   	cli_len = sizeof(cli);
 		
@@ -46,22 +46,22 @@ int main()
 			
 			while( 1 ) 
 			{
-			    n=recv(cli_sd, str, MAXLINE, 0); //¦¬¨ú¦r¤¸ 
-			    if (n == 0)
+			    	n=recv(cli_sd, str, MAXLINE, 0); //æ”¶å–å­—å…ƒ 
+			    	if (n == 0)
 				{
 					puts("receive complete!!\n\n");
-			    	break;
+			    		break;
 				}
 				str[n]='\0';
-			    printf("[%d] recv:%s  (size:%d) \n",counter,str,n);
+			    	printf("[%d] recv:%s  (size:%d) \n",counter,str,n);
 				
 				int i;
-				for(i = 0; i < n; ++i) //¤@¦¸±N¦h­Ó¦r¤¸¼g¤JÀÉ®× 
+				for(i = 0; i < n; ++i) //ä¸€æ¬¡å°‡å¤šå€‹å­—å…ƒå¯«å…¥æª”æ¡ˆ 
 				{
 					putc(str[i],fptr1);
 				}
-				sleep(1); //¹F¦¨¤@¦¸¦¬¦h­Ó¦r¤¸  
-			    counter++;
+				sleep(1); //é”æˆä¸€æ¬¡æ”¶å¤šå€‹å­—å…ƒ  
+			    	counter++;
 			}
 		}
 		fclose(fptr1);
