@@ -15,32 +15,32 @@ int main(void)
 	
 	LPHOSTENT hp;
 	struct in_addr sAddr;
-	int a1, b1, c1, d1, a2, b2, c2, d2;  //«Ø¥ßÀx¦sIP¦ì¸m¦U­Ó¼Æ­ÈªºÅÜ¼Æ
-	char dot;  //«Ø¥ßÀx¦sIP¦ì¸m¤¤ÂIªºÅÜ¼Æ
-	char inputS[15];  //¥Î©ó·j´MIPªºstring
-	printf("Please input domain name range\n");  //¿é¤J­n¬d¸ßªºIPªº½d³ò
+	int a1, b1, c1, d1, a2, b2, c2, d2;  //å»ºç«‹å„²å­˜IPä½ç½®å„å€‹æ•¸å€¼çš„è®Šæ•¸
+	char dot;  //å»ºç«‹å„²å­˜IPä½ç½®ä¸­é»çš„è®Šæ•¸
+	char inputS[15];  //ç”¨æ–¼æœå°‹IPçš„string
+	printf("Please input domain name range\n");  //è¼¸å…¥è¦æŸ¥è©¢çš„IPçš„ç¯„åœ
 	printf("From: ");
-	scanf("%d""%c""%d""%c""%d""%c""%d", &a1, &dot, &b1, &dot, &c1, &dot, &d1);  //¨Ì§ÇÅª¤J°_©lIPªº¼Æ¦r,ÂI,¼Æ¦r,ÂI,¼Æ¦r,ÂI,¼Æ¦r
+	scanf("%d""%c""%d""%c""%d""%c""%d", &a1, &dot, &b1, &dot, &c1, &dot, &d1);  //ä¾åºè®€å…¥èµ·å§‹IPçš„æ•¸å­—,é»,æ•¸å­—,é»,æ•¸å­—,é»,æ•¸å­—
 	printf("To: ");
-	scanf("%d""%c""%d""%c""%d""%c""%d", &a2, &dot, &b2, &dot, &c2, &dot, &d2);  //¨Ì§ÇÅª¤Jµ²§ôIPªº¼Æ¦r,ÂI,¼Æ¦r,ÂI,¼Æ¦r,ÂI,¼Æ¦r
+	scanf("%d""%c""%d""%c""%d""%c""%d", &a2, &dot, &b2, &dot, &c2, &dot, &d2);  //ä¾åºè®€å…¥çµæŸIPçš„æ•¸å­—,é»,æ•¸å­—,é»,æ•¸å­—,é»,æ•¸å­—
 	printf("\n");
 	
-	int i = d1;  //³o­ÓÅÜ¼Æ±N·|¥Î¨Ó¶i¦æ°j°é»PIP¦ì¸mªº§ó§ï
+	int i = d1;  //é€™å€‹è®Šæ•¸å°‡æœƒç”¨ä¾†é€²è¡Œè¿´åœˆèˆ‡IPä½ç½®çš„æ›´æ”¹
 	while(i <= d2)
 	{
-		sprintf(inputS, "%d""%c""%d""%c""%d""%c""%d", a1, dot, b1, dot, c1, dot, i);  //±N¥ı«eÅª¤J¤§¦U­ÓÅÜ¼Æµ²¦X¦¨¤@­Óstring,¥Î©ó·j´MIP
+		sprintf(inputS, "%d""%c""%d""%c""%d""%c""%d", a1, dot, b1, dot, c1, dot, i);  //å°‡å…ˆå‰è®€å…¥ä¹‹å„å€‹è®Šæ•¸çµåˆæˆä¸€å€‹string,ç”¨æ–¼æœå°‹IP
 		sAddr.s_addr=inet_addr(inputS);
 		hp=gethostbyaddr((LPSTR) &sAddr, sizeof(sAddr),AF_INET);
-printf(inputS);
+		printf(inputS);
 		printf("'s host name: ");
 		if(hp==NULL)
 		    printf("none\n");
 		else
 		{
-printf(hp->h_name);
+			printf(hp->h_name);
 		    printf("\n");	
    		}
-		i = i + 1;  //±N­n¬d¸ßªºIP¦ì¸m¥[1
+		i = i + 1;  //å°‡è¦æŸ¥è©¢çš„IPä½ç½®åŠ 1
 	}
 }
 
