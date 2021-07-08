@@ -1,5 +1,5 @@
-//clientºİ(¶Ç°e)
-//client -> server ¤G¦ì¤¸ÀÉ
+//clientç«¯(å‚³é€)
+//client -> server äºŒä½å…ƒæª”
 #include <stdio.h>
 #include <string.h>
 #include <winsock.h>
@@ -24,34 +24,34 @@ int main(int argc, char** argv) {
    	if( fptr1!=NULL)
    	{
    	
-	   	WSAStartup(0x101,(LPWSADATA) &wsadata); // ©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
-	   	sd=socket(AF_INET, SOCK_STREAM, 0); //¶}±Ò¤@­Ó TCP socket.
-	   	//¬°³s½u§@·Ç³Æ¡A¥]§t¶ñ¼g sockaddr_in µ²ºc (serv) ¡C
-	   	//¤º®e¦³¡Gserver ªº IP ¦ì§}¡Aport number µ¥µ¥¡C
+	   	WSAStartup(0x101,(LPWSADATA) &wsadata); // å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
+	   	sd=socket(AF_INET, SOCK_STREAM, 0); //é–‹å•Ÿä¸€å€‹ TCP socket.
+	   	//ç‚ºé€£ç·šä½œæº–å‚™ï¼ŒåŒ…å«å¡«å¯« sockaddr_in çµæ§‹ (serv) ã€‚
+	   	//å…§å®¹æœ‰ï¼šserver çš„ IP ä½å€ï¼Œport number ç­‰ç­‰ã€‚
 	   	serv.sin_family       = AF_INET;
 	   	serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
 	   	serv.sin_port         = htons(5678);
-	   	connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // ³s±µ¦Ü echo server
+	   	connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // é€£æ¥è‡³ echo server
 	   	
-		recv(sd, ready, MAXLINE, 0); //±µ¦¬©Ò¦³client³£³s¤Jªº³qª¾ 
+		recv(sd, ready, MAXLINE, 0); //æ¥æ”¶æ‰€æœ‰clientéƒ½é€£å…¥çš„é€šçŸ¥ 
 	
 		if(strcmp(ready, "ready") == 0)
 		{
 			while (!feof(fptr1))
 			{
-	    		bytes=fread(str,sizeof(char),MAX,fptr1); //Åª¨ú¹Ï¤ùªº¸ê®Æ 
-	    		send(sd, str, bytes, 0);
+	    			bytes=fread(str,sizeof(char),MAX,fptr1); //è®€å–åœ–ç‰‡çš„è³‡æ–™ 
+	    			send(sd, str, bytes, 0);
 			}
 	   		sleep(1);
-	   		send(sd, eof, strlen(eof)+1, 0); //¶Ç°eEOF¦Üserver
+	   		send(sd, eof, strlen(eof)+1, 0); //å‚³é€EOFè‡³server
 	  	 	printf("send :%s\n",eof);
 	   		printf("sent complete!!\n");
 	  	}//end if
 	   	system("pause");
-	   	closesocket(sd); //Ãö³¬TCP socket
-	   	WSACleanup();  // µ²§ô WinSock DLL ªº¨Ï¥Î
+	   	closesocket(sd); //é—œé–‰TCP socket
+	   	WSACleanup();  // çµæŸ WinSock DLL çš„ä½¿ç”¨
 	   	fclose(fptr1);
-	   return 0;
+	   	return 0;
 	}
 }
 
