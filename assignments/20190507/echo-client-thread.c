@@ -14,49 +14,51 @@ WSADATA 		wsadata;
 int timeout = 50,n;
 
 void *recvMess(void *argu) {
-    while (1) {
-        setsockopt(sd,SOL_SOCKET,SO_RCVTIMEO,&timeout,sizeof(timeout));
+	while (1) 
+	{
+        	setsockopt(sd,SOL_SOCKET,SO_RCVTIMEO,&timeout,sizeof(timeout));
 		n=recv(sd, str_r, MAXLINE, 0); 
-		if(strcmp(str_r, reject) == 0) //§PÂ_¦¬¨ìªº°T®§¬O§_¬°¤H¼Æ¤wº¡ªº°T®§ 
+		if(strcmp(str_r, reject) == 0) //åˆ¤æ–·æ”¶åˆ°çš„è¨Šæ¯æ˜¯å¦ç‚ºäººæ•¸å·²æ»¿çš„è¨Šæ¯ 
 		{
-			printf("%s\n", reject); //§iª¾¨Ï¥ÎªÌ¤H¼Æ¤wº¡ 
-			closesocket(sd); //Â_½u 
+			printf("%s\n", reject); //å‘ŠçŸ¥ä½¿ç”¨è€…äººæ•¸å·²æ»¿ 
+			closesocket(sd); //æ–·ç·š 
 		   	WSACleanup();
 		   	system("pause");
 		}
 		if(n!=-1)
-            printf("recv: %s (%d bytes)\n",str_r,strlen(str_r)+1);
-    }
+			printf("recv: %s (%d bytes)\n",str_r,strlen(str_r)+1);
+	}
 }
 
 int main(int argc, char** argv) {
-   int n,i,j,total=0;
-    pthread_t thread1;
+	int n,i,j,total=0;
+	pthread_t thread1;
 
-   WSAStartup(0x101,(LPWSADATA) &wsadata);
-
-
-   sd=socket(AF_INET, SOCK_STREAM, 0);
-
-   serv.sin_family       = AF_INET;
-   serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
-   serv.sin_port         = htons(5678);
-
-   connect(sd, (LPSOCKADDR) &serv, sizeof(serv));
+   	WSAStartup(0x101,(LPWSADATA) &wsadata);
 
 
-    pthread_create(&thread1, NULL, &recvMess, NULL);
+   	sd=socket(AF_INET, SOCK_STREAM, 0);
+
+   	serv.sin_family       = AF_INET;
+   	serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
+   	serv.sin_port         = htons(5678);
+
+   	connect(sd, (LPSOCKADDR) &serv, sizeof(serv));
+
+
+    	pthread_create(&thread1, NULL, &recvMess, NULL);
     
-	while(1){
+	while(1)
+	{
 		gets(str);
 		send(sd, str, strlen(str)+1, 0);
 	}
 
-   closesocket(sd);
+   	closesocket(sd);
 
-   WSACleanup();
-   system("pause");
+   	WSACleanup();
+   	system("pause");
 
-   return 0;
+   	return 0;
 }
 
