@@ -1,2 +1,0 @@
-This is an AB game.
-Multiple players all guess the number at the same time, whoever guesses the right answer first wins.
