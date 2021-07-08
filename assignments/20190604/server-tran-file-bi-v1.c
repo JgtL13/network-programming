@@ -1,55 +1,55 @@
-//serverºİ(±µ¦¬)
-//client -> server ¤G¦ì¤¸ÀÉ
+//serverç«¯(æ¥æ”¶)
+//client -> server äºŒä½å…ƒæª”
 
 #include <stdio.h>
 #include <string.h>
 #include <winsock.h>
 
-#define MAXLINE 1024    /* ¦r¦ê½w½Ä°Ïªø«× */
+#define MAXLINE 1024    /* å­—ä¸²ç·©è¡å€é•·åº¦ */
 #define MAX 50
 
 int main()
 {
-	SOCKET	serv_sd, cli_sd, cli_sd2;        /* socket ´y­z¤l */
+	SOCKET	serv_sd, cli_sd, cli_sd2;        /* socket æè¿°å­ */
   	int   	cli_len, n=1, bytes;
   	char  	str[MAXLINE];
   	char str_r[MAXLINE];
   	struct 	sockaddr_in   	serv, cli;
   	WSADATA wsadata;
     
-	WSAStartup(0x101, &wsadata); //©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
-  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// ¶}±Ò TCP socket
-   	//«ü©w socket ªº IP ¦ì§}©M port number
+	WSAStartup(0x101, &wsadata); //å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
+  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// é–‹å•Ÿ TCP socket
+   	//æŒ‡å®š socket çš„ IP ä½å€å’Œ port number
    	serv.sin_family      = AF_INET;
    	serv.sin_addr.s_addr = 0;
-   	serv.sin_port        = htons(5678);	// «ü©w IPPORT_ECHO ¬° echo port
-    //bind(serv_sd, &serv, sizeof(serv)) ;
-    bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
-   	listen(serv_sd, 5) ; //©I¥s listen() ¨Ï socket ¶i¤J¡uºÊÅ¥¡vª¬ºA
+   	serv.sin_port        = htons(5678);	// æŒ‡å®š IPPORT_ECHO ç‚º echo port
+    	//bind(serv_sd, &serv, sizeof(serv)) ;
+    	bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
+   	listen(serv_sd, 5) ; //å‘¼å« listen() ä½¿ socket é€²å…¥ã€Œç›£è½ã€ç‹€æ…‹
    	cli_len = sizeof(cli);
 
    	while (1) 
 	{
    		printf("server: waiting for client\n");
-   		cli_sd = accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //¶}±Òclient1ªºsocket 
-   		cli_sd2 = accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //¶}±Òclient2ªºsocket 
-   		send(cli_sd, "ready", strlen("ready") + 1, 0); //§iª¾client1¥i¥H¶i¦æ¶Ç°e¤F 
-        while(1) 
+   		cli_sd = accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //é–‹å•Ÿclient1çš„socket 
+   		cli_sd2 = accept(serv_sd, (LPSOCKADDR) &cli, &cli_len); //é–‹å•Ÿclient2çš„socket 
+   		send(cli_sd, "ready", strlen("ready") + 1, 0); //å‘ŠçŸ¥client1å¯ä»¥é€²è¡Œå‚³é€äº† 
+        	while(1) 
 		{
-            n=recv(cli_sd, str, MAXLINE, 0); //±µ¦¬¸ê®Æ 
-            if (strcmp(str,"EOF") == 0) //ÀË¬d¸ê®Æ¬O§_¶Ç§¹ 
-            {
-            	send(cli_sd2, "EOF", strlen("EOF") + 1, 0); //¶Çµ¹client2§iª¾µ²§ô 
-            	break; 
+            		n=recv(cli_sd, str, MAXLINE, 0); //æ¥æ”¶è³‡æ–™ 
+            		if (strcmp(str,"EOF") == 0) //æª¢æŸ¥è³‡æ–™æ˜¯å¦å‚³å®Œ 
+            		{
+            			send(cli_sd2, "EOF", strlen("EOF") + 1, 0); //å‚³çµ¦client2å‘ŠçŸ¥çµæŸ 
+            			break; 
 			}
-            memcpy(str_r, str, MAXLINE); //±N¦¬¨ìªº¸ê®Æ½Æ»s¨ì¥t¤@­Ó¯x°}¤¤ 
-            send(cli_sd2, str_r, n, 0); //¶Çµ¹client2 
-        }
-	    printf("recv EOF:%s\n" ,str);
-	    printf("recv complete!! \n");
-    }
-
-	//µ²§ô WinSock DLL ªº¨Ï¥Î
+            		memcpy(str_r, str, MAXLINE); //å°‡æ”¶åˆ°çš„è³‡æ–™è¤‡è£½åˆ°å¦ä¸€å€‹çŸ©é™£ä¸­ 
+            		send(cli_sd2, str_r, n, 0); //å‚³çµ¦client2 
+        	}
+		printf("recv EOF:%s\n" ,str);
+		printf("recv complete!! \n");
+	}
+	
+	//çµæŸ WinSock DLL çš„ä½¿ç”¨
 	system("pause");
    	closesocket(serv_sd);
    	closesocket(cli_sd);
