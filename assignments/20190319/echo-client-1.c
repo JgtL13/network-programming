@@ -17,76 +17,76 @@ int main(int argc, char** argv) {
    
    	memset(str,1,MAXLINE);
    
-   	WSAStartup(0x101,(LPWSADATA) &wsadata); // ©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+   	WSAStartup(0x101,(LPWSADATA) &wsadata); // å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
   
  
-   	sd=socket(AF_INET, SOCK_STREAM, 0); //¶}±Ò¤@­Ó TCP socket.
+   	sd=socket(AF_INET, SOCK_STREAM, 0); //é–‹å•Ÿä¸€å€‹ TCP socket.
    
    	serv.sin_family       = AF_INET; 
    	serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
    	serv.sin_port         = htons(5678);
 
-   	connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // ³s±µ¦Ü echo server
+   	connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // é€£æ¥è‡³ echo server
 	
-   	for (i = 0; i < 64; i++)  //¦¹³B¥ÎÂù¼h°j°éªº¥Î·N¬°´î¤Öµe­±§ó·s³t²v 
+   	for (i = 0; i < 64; i++)  //æ­¤è™•ç”¨é›™å±¤è¿´åœˆçš„ç”¨æ„ç‚ºæ¸›å°‘ç•«é¢æ›´æ–°é€Ÿç‡ 
    	{
    		clock_t t;
-		t = clock();  //±Ò°Ê­p®É¾¹ 
+		t = clock();  //å•Ÿå‹•è¨ˆæ™‚å™¨ 
    		for(j = 0; j < 16384; ++j)
 		{
-	   		n = send(sd, str, MAXLINE, 0); //¶Ç°e
+	   		n = send(sd, str, MAXLINE, 0); //å‚³é€
 		}	
-		t = clock() - t;  //­pºâ©Òªá®É¶¡ 
+		t = clock() - t;  //è¨ˆç®—æ‰€èŠ±æ™‚é–“ 
 	   	float time_taken = ((float)t) / CLOCKS_PER_SEC;
-	   	speed = 16384 / time_taken / 1024;  //­pºâ³t²v 
+	   	speed = 16384 / time_taken / 1024;  //è¨ˆç®—é€Ÿç‡ 
 	   	printf("Sending speed:%0.2f kbps\n", speed);
    	}
  
-   	closesocket(sd); //Ãö³¬TCP socket
+   	closesocket(sd); //é—œé–‰TCP socket
    	
    	
-	//¨¤¦â¥æ´«
-	WSAStartup(0x101, &wsadata); //©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+	//è§’è‰²äº¤æ›
+	WSAStartup(0x101, &wsadata); //å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
    	
-  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// ¶}±Ò TCP socket
+  	serv_sd=socket(AF_INET, SOCK_STREAM, 0);// é–‹å•Ÿ TCP socket
 
-   	//«ü©w socket ªº IP ¦ì§}©M port number
+   	//æŒ‡å®š socket çš„ IP ä½å€å’Œ port number
    	serv.sin_family      = AF_INET;
    	serv.sin_addr.s_addr = 0;
-   	serv.sin_port        = htons(5678);	// «ü©wport
+   	serv.sin_port        = htons(5678);	// æŒ‡å®šport
 
-    bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
+    	bind(serv_sd, (LPSOCKADDR) &serv, sizeof(serv));
     	
-   	listen(serv_sd, 5) ; //©I¥s listen() ¨Ï socket ¶i¤J¡uºÊÅ¥¡vª¬ºA	
+   	listen(serv_sd, 5) ; //å‘¼å« listen() ä½¿ socket é€²å…¥ã€Œç›£è½ã€ç‹€æ…‹	
 	cli_len = sizeof(cli);
 	printf("Client waiting for Server\n");  
 	cli_sd=accept(serv_sd, (LPSOCKADDR) &cli, &cli_len);
 	
 	clock_t t;
-	t = clock();  //±Ò°Ê­p®É¾¹ 
+	t = clock();  //å•Ÿå‹•è¨ˆæ™‚å™¨ 
 	
 	while(1)
 	{
-	   	m=recv(cli_sd, str_r, MAXLINE, 0); //¥Ñserver±µ¦¬ 
-	   	++counter;  //­pºâ±µ¦¬¤F´X¦¸¡A¦¹°Ê§@¬O¬°¤F¤§«á­°§Cµe­±ªº§ó·s³t²v 
-	    if(counter == 16384)
-	    {
+		m=recv(cli_sd, str_r, MAXLINE, 0); //ç”±serveræ¥æ”¶ 
+	   	++counter;  //è¨ˆç®—æ¥æ”¶äº†å¹¾æ¬¡ï¼Œæ­¤å‹•ä½œæ˜¯ç‚ºäº†ä¹‹å¾Œé™ä½ç•«é¢çš„æ›´æ–°é€Ÿç‡ 
+	    	if(counter == 16384)
+	    	{
 	    	counter = 0; 
-	    	t = clock() - t;  //­pºâ©Òªáªº®É¶¡ 
-		   	float time_taken = ((float)t) / CLOCKS_PER_SEC;
-		   	speed = 16384 / time_taken / 1024;  //­pºâ³t²v 
-		   	printf("Receiving speed:%0.2f kbps\n", speed);
-			t = clock();  //­«³]­p®É¾¹
+	    	t = clock() - t;  //è¨ˆç®—æ‰€èŠ±çš„æ™‚é–“ 
+		float time_taken = ((float)t) / CLOCKS_PER_SEC;
+		speed = 16384 / time_taken / 1024;  //è¨ˆç®—é€Ÿç‡ 
+		printf("Receiving speed:%0.2f kbps\n", speed);
+		t = clock();  //é‡è¨­è¨ˆæ™‚å™¨
 		}
-	    if(m == 0)	
-			break;
+		if(m == 0)	
+		break;
 			
 	}
 	
 	closesocket(cli_sd);    
-	//µ²§ô WinSock DLL ªº¨Ï¥Î
+	//çµæŸ WinSock DLL çš„ä½¿ç”¨
    	closesocket(serv_sd);
-   	WSACleanup();  // µ²§ô WinSock DLL ªº¨Ï¥Î
+   	WSACleanup();  // çµæŸ WinSock DLL çš„ä½¿ç”¨
    	system("pause");
    
    	return 0;
