@@ -38,7 +38,7 @@ int main(void)
 		else
 		{
 			printf(hp->h_name);
-		    printf("\n");	
+		    	printf("\n");	
    		}
 		i = i + 1;  //將要查詢的IP位置加1
 	}
