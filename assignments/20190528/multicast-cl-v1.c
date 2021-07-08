@@ -15,122 +15,121 @@ int n, m, serv_len;
 int flag=1,len=sizeof(int); 
 char channel = 0, trash;
 
-void *recvMess(void *argu) {    // ¨C¹j¤@¬íÄÁ¦L¥X¤@¦¸¦¬¨ìªº°T®§ 
-    while (1) {
+void *recvMess(void *argu) {    // æ¯éš”ä¸€ç§’é˜å°å‡ºä¸€æ¬¡æ”¶åˆ°çš„è¨Šæ¯ 
+    	while (1) {
         cli_len= sizeof(cli);        
         memset(str, "\0", sizeof(str));
-		n=recvfrom(sd, str, MAXLINE, 0,(LPSOCKADDR) &cli,&cli_len ); //¥Ñecho server±µ¦¬ 
-		if (n > 0)
+	n=recvfrom(sd, str, MAXLINE, 0,(LPSOCKADDR) &cli,&cli_len ); //ç”±echo serveræ¥æ”¶ 
+	if (n > 0)
         	printf("client(from:%s):%s,%d\n",inet_ntoa(cli.sin_addr),str,n);  
-    }
+    	}
 }
 
 int main(int argc, char** argv) {  
 
 	pthread_t thread1;
    
-   	WSAStartup(0x101,(LPWSADATA) &wsadata); // ©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+   	WSAStartup(0x101,(LPWSADATA) &wsadata); // å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
   
    	sd=socket(AF_INET, SOCK_DGRAM, 0);
-   	sd_brod=socket(AF_INET, SOCK_DGRAM, 0); //³]©w±µ¦¬¼s¼½¥Îªºsocket 
+   	sd_brod=socket(AF_INET, SOCK_DGRAM, 0); //è¨­å®šæ¥æ”¶å»£æ’­ç”¨çš„socket 
    
-    if ( setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &flag, len) < 0 )
-        printf("setsockopt() failed\n");
+    	if ( setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &flag, len) < 0 )
+        	printf("setsockopt() failed\n");
    	
-	char broadcast = 'a'; //³]©w±µ¦¬¼s¼½¥Îªºsocket 
-    if(	setsockopt(sd_brod, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
-		   printf("setsockopt() broadcast error!\n");
+	char broadcast = 'a'; //è¨­å®šæ¥æ”¶å»£æ’­ç”¨çš„socket 
+   	if(	setsockopt(sd_brod, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
+		printf("setsockopt() broadcast error!\n");
    	
    	cli.sin_family       = AF_INET;
    	cli.sin_addr.s_addr  = 0;
    	cli.sin_port         = htons(8813);
    	
-   	brod.sin_family       = AF_INET;//³]©w±µ¦¬¼s¼½¥Îªºsocket 
-    brod.sin_addr.s_addr  = 0;   
-    brod.sin_port         = htons(0103);
+   	brod.sin_family       = AF_INET;//è¨­å®šæ¥æ”¶å»£æ’­ç”¨çš„socket 
+    	brod.sin_addr.s_addr  = 0;   
+    	brod.sin_port         = htons(0103);
    	
   	if( bind(sd, (LPSOCKADDR) &cli, sizeof(cli)) <0 )
    		printf("bind error!\n");
    	
-   	if( bind(sd_brod, (LPSOCKADDR) &brod, sizeof(brod)) <0 ) //³]©w±µ¦¬¼s¼½¥Îªºsocket 
+   	if( bind(sd_brod, (LPSOCKADDR) &brod, sizeof(brod)) <0 ) //è¨­å®šæ¥æ”¶å»£æ’­ç”¨çš„socket 
    		printf("brodcast bind error!\n");
    		
 
    	
 	struct ip_mreq multicastRequest;  /* Multicast address join structure */ 	
-    /* Specify the multicast group */
-    multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.1");
-    /* Accept multicast from any interface */
-    multicastRequest.imr_interface.s_addr = htonl(INADDR_ANY);
-    /* Join the multicast address */
+    	/* Specify the multicast group */
+    	multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.1");
+    	/* Accept multicast from any interface */
+    	multicastRequest.imr_interface.s_addr = htonl(INADDR_ANY);
+    	/* Join the multicast address */
 
-    if (setsockopt(sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
-    	printf("setsockopt() failed\n");
+    	if (setsockopt(sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
+    		printf("setsockopt() failed\n");
 
  	serv_len=sizeof(serv);
  	pthread_create(&thread1, NULL, &recvMess, NULL);
  	
- 	setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)); //¤@¶}©l¥ıÅã¥Ü¸`¥Ø³æÅı¨Ï¥ÎªÌ¿ï¾Ü 
+ 	setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)); //ä¸€é–‹å§‹å…ˆé¡¯ç¤ºç¯€ç›®å–®è®“ä½¿ç”¨è€…é¸æ“‡ 
  	brod_len= sizeof(brod);
- 	m=recvfrom(sd_brod, str_brod, MAXLINE, 0,(LPSOCKADDR) &brod,&brod_len ); //¥Ñecho server±µ¦¬ 
+ 	m=recvfrom(sd_brod, str_brod, MAXLINE, 0,(LPSOCKADDR) &brod,&brod_len ); //ç”±echo serveræ¥æ”¶ 
 	if (m > 0)
 		printf("%s", str_brod); 
 
-	while(1){
-		channel = getchar(); //±µ¦¬¨Ï¥ÎªÌªº¿é¤J 
+	while(1)
+	{
+		channel = getchar(); //æ¥æ”¶ä½¿ç”¨è€…çš„è¼¸å…¥ 
 		trash = getchar();
 		printf("switch to channel %c\n\n", channel);
 		switch(channel)
 		{
-			case 'x': //Åã¥Ü¸`¥Ø³æÅı¨Ï¥ÎªÌ­«·s¿ï¾Ü 
-					multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.1");
-					setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest));
+			case 'x': //é¡¯ç¤ºç¯€ç›®å–®è®“ä½¿ç”¨è€…é‡æ–°é¸æ“‡ 
+				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.1");
+				setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest));
     				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.2");
-					setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest));
+				setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest));
     				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.3");
-					setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest));
+				setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest));
 				      
-					m=recvfrom(sd_brod, str_brod, MAXLINE, 0,(LPSOCKADDR) &brod,&brod_len ); //¥Ñecho server±µ¦¬ 
-					if (m > 0)
+				m=recvfrom(sd_brod, str_brod, MAXLINE, 0,(LPSOCKADDR) &brod,&brod_len ); //ç”±echo serveræ¥æ”¶ 
+				if (m > 0)
 			        	printf("%s", str_brod); 
-		   			break;
-			case '1': //²Ä1ÀW¹D 
-					multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.1");
-					if (setsockopt(sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
+		   		break;
+			case '1': //ç¬¬1é »é“ 
+				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.1");
+				if (setsockopt(sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
     					printf("setsockopt() failed\n");
     				break;
-    		case 'a': //°h¥X²Ä1ÀW¹D 
+    			case 'a': //é€€å‡ºç¬¬1é »é“ 
     				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.1");
-					if (setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
+				if (setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
     					printf("setsockopt() failed\n");
     				break;
-    		case '2'://²Ä2ÀW¹D
-					multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.2");
-					if (setsockopt(sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
+    			case '2'://ç¬¬2é »é“
+				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.2");
+				if (setsockopt(sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
     					printf("setsockopt() failed\n");
     				break;
-    		case 'b'://°h¥X²Ä2ÀW¹D 
-					multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.2");
-					if (setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
+    			case 'b'://é€€å‡ºç¬¬2é »é“ 
+				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.2");
+				if (setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
     					printf("setsockopt() failed\n");
     				break;
-    		case '3'://²Ä3ÀW¹D
-					multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.3");
-					if (setsockopt(sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
+    			case '3'://ç¬¬3é »é“
+				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.3");
+				if (setsockopt(sd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
     					printf("setsockopt() failed\n");
     				break;
-    		case 'c'://°h¥X²Ä3ÀW¹D 
-					multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.3");
-					if (setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
+    			case 'c'://é€€å‡ºç¬¬3é »é“ 
+				multicastRequest.imr_multiaddr.s_addr = inet_addr("224.1.1.3");
+				if (setsockopt(sd, IPPROTO_IP, IP_DROP_MEMBERSHIP, (void *) &multicastRequest,sizeof(multicastRequest)) < 0)
     					printf("setsockopt() failed\n");
     				break;
 		} 
 	}
 	
-  	closesocket(sd); //Ãö³¬ socket
-    WSACleanup();  // µ²§ô WinSock DLL ªº¨Ï¥Î
+  	closesocket(sd); //é—œé–‰ socket
+    	WSACleanup();  // çµæŸ WinSock DLL çš„ä½¿ç”¨
    
    	return 0;
 }
-
-
