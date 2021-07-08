@@ -18,114 +18,114 @@ WSADATA 		wsadata;
 int timeout = 50,n,serv_len,cli_len,channel=1, BROADCAST = 8813, changePort;
 
 
-
 void *recvMess(void *argu) {
-
-    while (1) {
-        cli_len= sizeof(cli); 
+    	while (1)
+	{
+        	cli_len= sizeof(cli); 
 		memset(str, "\0", sizeof(str));     
-		n=recvfrom(sd, str, MAXLINE, 0,(LPSOCKADDR) &cli,&cli_len ); //¥Ñecho server±µ¦¬ 
+		n=recvfrom(sd, str, MAXLINE, 0,(LPSOCKADDR) &cli,&cli_len ); //ç”±echo serveræ¥æ”¶ 
 		if (n > 0 && n == 20) 
 		{
 			printf("client(from:%s):%s,%d\n",inet_ntoa(cli.sin_addr),str,n);  
 		}
-		if(n != 20) //­Y±µ¦¬¨ì«D¥­±`¶Çªº20­Ó¼Æ¦r©Î¦r¥À(¤]´N¬O±µ¦¬¨ìportªº¸¹½X) 
+		if(n != 20) //è‹¥æ¥æ”¶åˆ°éå¹³å¸¸å‚³çš„20å€‹æ•¸å­—æˆ–å­—æ¯(ä¹Ÿå°±æ˜¯æ¥æ”¶åˆ°portçš„è™Ÿç¢¼) 
 		{
 			changePort = atoi(str);
-			BROADCAST = changePort; //±N·sªºport number assign µ¹ BROADCAST 
-			closesocket(sd); //§Q¥Î·sªºBROADCAST­«·sbind 
+			BROADCAST = changePort; //å°‡æ–°çš„port number assign çµ¦ BROADCAST 
+			closesocket(sd); //åˆ©ç”¨æ–°çš„BROADCASTé‡æ–°bind 
 			sd=socket(AF_INET, SOCK_DGRAM, 0);
-    		broadcast = 'a';
-    		if(	setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
-		   		printf("setsockopt() broadcast error!\n");
+    			broadcast = 'a';
+    			if(setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
+				printf("setsockopt() broadcast error!\n");
 		   			
-		    serv.sin_family       = AF_INET;
-    		serv.sin_addr.s_addr  = 0;
+			serv.sin_family       = AF_INET;
+    			serv.sin_addr.s_addr  = 0;
 			serv.sin_port  = htons(BROADCAST);
 					
-    		if( bind(sd, (LPSOCKADDR) &serv, sizeof(serv)) < 0 )    				
+    			if( bind(sd, (LPSOCKADDR) &serv, sizeof(serv)) < 0 )    				
    				printf("bind error!(%d)\n", WSAGetLastError ());    
 		}
-    }
+    	}
 }
 
 int main(void) {
 	
-    int n,i,j,total=0;
-    pthread_t thread1;
+    	int n,i,j,total=0;
+    	pthread_t thread1;
 
-    WSAStartup(0x101,(LPWSADATA) &wsadata); // ©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+    	WSAStartup(0x101,(LPWSADATA) &wsadata); // å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
 
 
-    sd=socket(AF_INET, SOCK_DGRAM, 0);
-    broadcast = 'a';
-    if(	setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
-		   printf("setsockopt() broadcast error!\n");
+    	sd=socket(AF_INET, SOCK_DGRAM, 0);
+    	broadcast = 'a';
+    	if(setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
+		printf("setsockopt() broadcast error!\n");
 	
-    serv.sin_family       = AF_INET;
-    serv.sin_addr.s_addr  = 0;   
-    serv.sin_port         = htons(BROADCAST);
-    if( bind(sd, (LPSOCKADDR) &serv, sizeof(serv)) < 0 )
+    	serv.sin_family       = AF_INET;
+    	serv.sin_addr.s_addr  = 0;   
+    	serv.sin_port         = htons(BROADCAST);
+    	if( bind(sd, (LPSOCKADDR) &serv, sizeof(serv)) < 0 )
    		printf("bind error!\n");
    	
-    serv_len=sizeof(serv);
+    	serv_len=sizeof(serv);
 
-    pthread_create(&thread1, NULL, &recvMess, NULL);
+    	pthread_create(&thread1, NULL, &recvMess, NULL);
     
 
-	while(1){
+	while(1)
+	{
 		scanf("%d",&channel);
 		printf("switch to channel %d\n\n",channel);
-		switch(channel){
+		switch(channel)
+		{
 			case 1:
-				    closesocket(sd);
+				closesocket(sd);
 			        sd=socket(AF_INET, SOCK_DGRAM, 0);
     				broadcast = 'a';
-    				if(	setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
+    				if(setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
 		   			printf("setsockopt() broadcast error!\n");
 		   			
 		       		serv.sin_family       = AF_INET;
     				serv.sin_addr.s_addr  = 0;
-					serv.sin_port  = htons(BROADCAST);
+				serv.sin_port  = htons(BROADCAST);
 					
     				if( bind(sd, (LPSOCKADDR) &serv, sizeof(serv)) < 0 )    				
    					printf("bind error!(%d)\n", WSAGetLastError ());      
-		   	   		 break;
+		   	   	break;
 			case 2:
-					closesocket(sd);
+				closesocket(sd);
 			        sd=socket(AF_INET, SOCK_DGRAM, 0);
     				broadcast = 'a';
-    				if(	setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
+    				if(setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
 		   			printf("setsockopt() broadcast error!\n");
 		   			
 		       		serv.sin_family       = AF_INET;
     				serv.sin_addr.s_addr  = 0;
-					serv.sin_port  = htons(BROADCAST+1);
+				serv.sin_port  = htons(BROADCAST+1);
     				if( bind(sd, (LPSOCKADDR) &serv, sizeof(serv)) < 0 )
    					printf("bind error!\n");
-  		   	   		 break;
+  		   	   	break;
 			case 3:
-					closesocket(sd);
+				closesocket(sd);
 			        sd=socket(AF_INET, SOCK_DGRAM, 0);
 			        
     				broadcast = 'a';
-    				if(	setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
+    				if(setsockopt(sd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast))<0)
 		   			printf("setsockopt() broadcast error!\n");
 		   			
 		       		serv.sin_family       = AF_INET;
     				serv.sin_addr.s_addr  = 0;
-					serv.sin_port  = htons(BROADCAST+2);
+				serv.sin_port  = htons(BROADCAST+2);
     				if( bind(sd, (LPSOCKADDR) &serv, sizeof(serv)) < 0 )
    					printf("bind error!\n");    
-		   	   		 break;
+		   	   	break;
 		}
 	}
 
-   closesocket(sd); //Ãö³¬TCP socket
+   	closesocket(sd); //é—œé–‰TCP socket
 
-   WSACleanup();  // µ²§ô WinSock DLL ªº¨Ï¥Î
-   system("pause");
+   	WSACleanup();  // çµæŸ WinSock DLL çš„ä½¿ç”¨
+   	system("pause");
 
-   return 0;
+   	return 0;
 }
-
