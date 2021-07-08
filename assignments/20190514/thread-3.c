@@ -11,81 +11,79 @@ char reject[100] = "Chat room is currently full, please try again later.\n";
 
 struct ThreadArgs /* Structure of arguments to pass to client thread */
 {
-    int clntSock;                      /* Socket descriptor for client */
+	int clntSock;                      /* Socket descriptor for client */
 };
 
 
 int main(int argc, char *argv[])
-
 {
 	struct ThreadArgs *threadArgs;   /* Pointer to argument structure for thread */
-    DWORD  threadID;                 /* Thread ID from CreateThread() */
+    	DWORD  threadID;                 /* Thread ID from CreateThread() */
 
 	int servSock;                    /* Socket descriptor for server */
-    int clntSock;                    /* Socket descriptor for client */
-    WSADATA wsaData;                 /* Structure for WinSock setup communication */
+    	int clntSock;                    /* Socket descriptor for client */
+    	WSADATA wsaData;                 /* Structure for WinSock setup communication */
 	struct sockaddr_in echoServAddr; /* Local address */
-    struct sockaddr_in echoClntAddr; /* Client address */
+    	struct sockaddr_in echoClntAddr; /* Client address */
  	unsigned int clntLen;            /* Length of client address data structure */
 
 	if (WSAStartup(0x101, &wsaData) != 0) /* Load Winsock 2.0 DLL */
-    {
-        printf("WSAStartup() failed");
-        exit(1);
-    }
+	{
+        	printf("WSAStartup() failed");
+        	exit(1);
+    	}
 
 	/* Create socket for incoming connections */
-    if ((servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-        printf("socket() failed");
+    	if ((servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+        	printf("socket() failed");
 
-    /* Construct local address structure */
-    memset(&echoServAddr, 0, sizeof(echoServAddr));   /* Zero out structure */
-    echoServAddr.sin_family = AF_INET;                /* Internet address family */
-    echoServAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
-    echoServAddr.sin_port = htons(5678);              /* Local port */
+    	/* Construct local address structure */
+    	memset(&echoServAddr, 0, sizeof(echoServAddr));   /* Zero out structure */
+    	echoServAddr.sin_family = AF_INET;                /* Internet address family */
+    	echoServAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
+    	echoServAddr.sin_port = htons(5678);              /* Local port */
 
-    /* Bind to the local address */
-    if (bind(servSock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-        printf("bind() failed");
+    	/* Bind to the local address */
+    	if (bind(servSock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
+        	printf("bind() failed");
 
-    /* Mark the socket so it will listen for incoming connections */
-    if (listen(servSock, 3) < 0)
-        printf("listen() failed");
+    	/* Mark the socket so it will listen for incoming connections */
+    	if (listen(servSock, 3) < 0)
+        	printf("listen() failed");
 
-    printf("Server is waiting for clients.\n");
-    for (;;) /* Run forever */
-    {
-	    clntLen = sizeof(echoClntAddr);
+    	printf("Server is waiting for clients.\n");
+    	for (;;) /* Run forever */
+    	{
+		clntLen = sizeof(echoClntAddr);
 	
-	    /* Wait for a client to connect */
+	    	/* Wait for a client to connect */
 		if ((clntSock = accept(servSock, (struct sockaddr *) &echoClntAddr, &clntLen)) < 0)
-		    printf("accept() failed");
+			printf("accept() failed");
 		
 		/* Create separate memory for client argument */
 		threadArgs = (struct ThreadArgs *) malloc(sizeof(struct ThreadArgs));
 		threadArgs -> clntSock = clntSock;
 		
 		if (CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE) ThreadMain, threadArgs, 0, (LPDWORD) &threadID) == NULL)
-		    printf("thread_create() failed");
+		    	printf("thread_create() failed");
 		
-		clients[clientNumber] = clntSock; //±N·s¥[¤Jªºclient¤§socket¦s¤J¯x°} 
-		++clientNumber;  //client¼Æ¶q¥[¤@ 
-		if(clientNumber == MAXCLI) //§PÂ_¤H¼Æ¬O§_¤wº¡ 
+		clients[clientNumber] = clntSock; //å°‡æ–°åŠ å…¥çš„clientä¹‹socketå­˜å…¥çŸ©é™£ 
+		++clientNumber;  //clientæ•¸é‡åŠ ä¸€ 
+		if(clientNumber == MAXCLI) //åˆ¤æ–·äººæ•¸æ˜¯å¦å·²æ»¿ 
 		{
-		    send(clients[clientNumber - 1] , reject , strlen(reject)+1 , 0 ); //¶Ç°eÂ_½u³qª¾ 
-			closesocket(clients[clientNumber - 1]); //Â_½u 
+		    	send(clients[clientNumber - 1] , reject , strlen(reject)+1 , 0 ); //å‚³é€æ–·ç·šé€šçŸ¥ 
+			closesocket(clients[clientNumber - 1]); //æ–·ç·š 
 			clients[clientNumber - 1] = 0;  
-			--clientNumber;  //client¼Æ¶q´î¤@ 
+			--clientNumber;  //clientæ•¸é‡æ¸›ä¸€ 
 			continue;
 		}
 		printf("New client with thread ID: %ld and socket:%d\n", threadID,clntSock);
 		    
 		int i;
-		for(i = 0; i < clientNumber; ++i) //¦V©Ò¦³¦b½uªºclientµo¥X¦³·sclient³s¤Jªº³qª¾ 
+		for(i = 0; i < clientNumber; ++i) //å‘æ‰€æœ‰åœ¨ç·šçš„clientç™¼å‡ºæœ‰æ–°clienté€£å…¥çš„é€šçŸ¥ 
 		{
-		    if(clients[i] != clntSock)
-		    	send(clients[i], logIn, strlen(logIn)+1, 0);  
-		        
+		 	if(clients[i] != clntSock)
+		    		send(clients[i], logIn, strlen(logIn)+1, 0); 
 		}
 	}
 }// end main
@@ -94,31 +92,31 @@ int main(int argc, char *argv[])
 
 void *ThreadMain(void *threadArgs)
 {
-    int clntSock;                   /* Socket descriptor for client connection */
-    /* Extract socket file descriptor from argument */
-    clntSock = ((struct ThreadArgs *) threadArgs) -> clntSock;
+    	int clntSock;                   /* Socket descriptor for client connection */
+    	/* Extract socket file descriptor from argument */
+    	clntSock = ((struct ThreadArgs *) threadArgs) -> clntSock;
 
 
 	char echoBuffer[1000];        /* Buffer for echo string */
-    int recvMsgSize = 1;                    /* Size of received message */
+    	int recvMsgSize = 1;                    /* Size of received message */
 	
-    /* Send received string and receive again until end of transmission */
-    while (recvMsgSize > 0)      /* zero indicates end of transmission */
-    {  	
-        /* Receive message from client */
-	    if ((recvMsgSize = recv(clntSock, echoBuffer, 1000, 0)) < 0)
-    		printf("recv() failed");
-        int i;
-        for(i = 0; i < clientNumber; ++i) //±N°T®§¶Ç°e¦Ü©Ò¦³¦b½uªºclient 
-        {
-        	if(clients[i] == clntSock) //­Y°j°é¹ïÀ³¨ì·í«eclient¦Û¤vªº¸Ü«h²¤¹L 
-        		continue;
-        	else
+    	/* Send received string and receive again until end of transmission */
+    	while (recvMsgSize > 0)      /* zero indicates end of transmission */
+    	{  	
+        	/* Receive message from client */
+	    	if ((recvMsgSize = recv(clntSock, echoBuffer, 1000, 0)) < 0)
+    			printf("recv() failed");
+        	int i;
+        	for(i = 0; i < clientNumber; ++i) //å°‡è¨Šæ¯å‚³é€è‡³æ‰€æœ‰åœ¨ç·šçš„client 
         	{
-        		send(clients[i], echoBuffer, strlen(echoBuffer)+1, 0);
+        		if(clients[i] == clntSock) //è‹¥è¿´åœˆå°æ‡‰åˆ°ç•¶å‰clientè‡ªå·±çš„è©±å‰‡ç•¥é 
+        			continue;
+        		else
+        		{
+        			send(clients[i], echoBuffer, strlen(echoBuffer)+1, 0);
 			}
 		}
-    }
-    closesocket(clntSock);    /* Close client socket */    
-    return (NULL);
+    	}
+    	closesocket(clntSock);    /* Close client socket */    
+    	return (NULL);
 }
