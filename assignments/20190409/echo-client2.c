@@ -6,41 +6,39 @@
 
 int main(int argc, char** argv) {  
 
-   SOCKET        	sd;     
-   struct sockaddr_in serv;
-   char  		str[1024];
-   char  		str_r[1024];
-   WSADATA 		wsadata;
-   int n = 1;
+   	SOCKET        	sd;     
+   	struct sockaddr_in serv;
+   	char  		str[1024];
+   	char  		str_r[1024];
+   	WSADATA 		wsadata;
+   	int n = 1;
 
-   WSAStartup(0x101,(LPWSADATA) &wsadata); // ©I¥s WSAStartup() µù¥U WinSock DLL ªº¨Ï¥Î
+   	WSAStartup(0x101,(LPWSADATA) &wsadata); // å‘¼å« WSAStartup() è¨»å†Š WinSock DLL çš„ä½¿ç”¨
   
-   sd=socket(AF_INET, SOCK_STREAM, 0); //¶}±Ò¤@­Ó TCP socket.
+   	sd=socket(AF_INET, SOCK_STREAM, 0); //é–‹å•Ÿä¸€å€‹ TCP socket.
    
-   serv.sin_family       = AF_INET; 
-   serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
-   serv.sin_port         = htons(1234);
+   	serv.sin_family       = AF_INET; 
+   	serv.sin_addr.s_addr  = inet_addr("127.0.0.1");
+   	serv.sin_port         = htons(1234);
 
-   connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // ³s±µ¦Ü echo server
+   	connect(sd, (LPSOCKADDR) &serv, sizeof(serv)); // é€£æ¥è‡³ echo server
    
-   while(1)
-   {
-   		n = recv(sd, str_r, MAXLINE, 0);//±µ¦¬¨Ó¦Ûclient1ªº¤º®e
+   	while(1)
+   	{
+   		n = recv(sd, str_r, MAXLINE, 0);//æ¥æ”¶ä¾†è‡ªclient1çš„å…§å®¹
    		printf("recv from client 1: %s (%d bytes)\n",str_r,n);
    		printf("speak: ");
-   		gets(str);//½ü¨ìclient2»¡¸Ü¡AÅª¨úclient2ªº¿é¤J 
-		send(sd, str, strlen(str)+1, 0);//°e¦Üserver
+   		gets(str);//è¼ªåˆ°client2èªªè©±ï¼Œè®€å–client2çš„è¼¸å…¥ 
+		send(sd, str, strlen(str)+1, 0);//é€è‡³server
    		printf("send: %s (%d bytes)\n" ,str,strlen(str)+1);
-   		n = recv(sd, str_r, MAXLINE, 0);//±µ¦¬¨Ó¦Ûclient3ªº¤º®e
+   		n = recv(sd, str_r, MAXLINE, 0);//æ¥æ”¶ä¾†è‡ªclient3çš„å…§å®¹
    		printf("recv from client 3: %s (%d bytes)\n",str_r,n);
-   }   
+   	}   
   
-   closesocket(sd); //Ãö³¬TCP socket
+   closesocket(sd); //é—œé–‰TCP socket
     
-   WSACleanup();  // µ²§ô WinSock DLL ªº¨Ï¥Î
+   WSACleanup();  // çµæŸ WinSock DLL çš„ä½¿ç”¨
    system("pause");
    
    return 0;
 }
-
-
